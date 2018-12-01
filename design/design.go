@@ -23,6 +23,7 @@ var _ = Resource("DataClient", func() {
 		})
 		Response(OK,  "plain/text")
 		Response(InternalServerError, ErrorMedia)
+		Response(BadRequest, ErrorMedia)
 	})
 
 	Action("del", func() {
@@ -33,6 +34,7 @@ var _ = Resource("DataClient", func() {
 		})
 		Response(OK,  "plain/text")
 		Response(InternalServerError, ErrorMedia)
+		Response(BadRequest, ErrorMedia)
 	})
 
 })

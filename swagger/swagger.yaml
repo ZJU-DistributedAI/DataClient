@@ -63,6 +63,10 @@ paths:
       responses:
         "200":
           description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
         "500":
           description: Internal Server Error
           schema:
@@ -87,6 +91,10 @@ paths:
       responses:
         "200":
           description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
         "500":
           description: Internal Server Error
           schema:

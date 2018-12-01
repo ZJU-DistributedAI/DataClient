@@ -51,6 +51,14 @@ func (ctx *AddDataClientContext) OK(resp []byte) error {
 	return err
 }
 
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *AddDataClientContext) BadRequest(r error) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
 // InternalServerError sends a HTTP response with status code 500.
 func (ctx *AddDataClientContext) InternalServerError(r error) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
@@ -92,6 +100,14 @@ func (ctx *DelDataClientContext) OK(resp []byte) error {
 	ctx.ResponseData.WriteHeader(200)
 	_, err := ctx.ResponseData.Write(resp)
 	return err
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *DelDataClientContext) BadRequest(r error) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
 }
 
 // InternalServerError sends a HTTP response with status code 500.

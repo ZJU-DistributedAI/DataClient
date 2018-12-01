@@ -1,9 +1,9 @@
-//go:generate goagen bootstrap -d data-client/design
+//go:generate goagen bootstrap -d DataClient/design
 
 package main
 
 import (
-	"data-client/app"
+	"DataClient/app"
 	"github.com/goadesign/goa"
 	"github.com/goadesign/goa/middleware"
 )
