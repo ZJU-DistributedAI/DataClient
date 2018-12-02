@@ -25,7 +25,6 @@ func NewDataClientController(service *goa.Service) *DataClientController {
 }
 
 var used_key_file = true
-
 var keyStoreDir 	= "UTC--2018-12-02T05-46-18.847380197Z--8bcf2f7c9445a5768d7ec98658fa317eb8be1cc8"
 var privateKeyStr 	= "9eefbcbd4e6061d49722fe04f9f14127aa2bed5160202c009549c73c4099445a"
 var ETH_HOST 		= "http://47.52.163.119:8545"
@@ -39,7 +38,7 @@ func (c *DataClientController) Add(ctx *app.AddDataClientContext) error {
 			goa.ErrBadRequest("Hash invalid!"))
 	}
 
-	var to = "032e31baffc740b1d491309eac9ad361296bf21c"
+	var to = "4a09e270bf5bae6ccda090cea401fae587b87ba6"
 	value := big.NewInt(0x0)
 	gasPrice := big.NewInt(200000000)
 	gasLimit := uint64(0xfffff)
