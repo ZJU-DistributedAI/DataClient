@@ -47,35 +47,7 @@ info:
   title: Data client to add or delete data
   version: ""
 paths:
-  /data/{hash}:
-    delete:
-      description: delete data hash
-      operationId: DataClient#del
-      parameters:
-      - description: data IPFS address
-        in: path
-        name: hash
-        required: true
-        type: string
-      produces:
-      - application/vnd.goa.error
-      - plain/text
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/error'
-      schemes:
-      - http
-      summary: del DataClient
-      tags:
-      - DataClient
+  /data/add/{hash}:
     post:
       description: add data hash
       operationId: DataClient#add
@@ -102,6 +74,35 @@ paths:
       schemes:
       - http
       summary: add DataClient
+      tags:
+      - DataClient
+  /data/del/{hash}:
+    post:
+      description: delete data hash
+      operationId: DataClient#del
+      parameters:
+      - description: data IPFS address
+        in: path
+        name: hash
+        required: true
+        type: string
+      produces:
+      - application/vnd.goa.error
+      - plain/text
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/error'
+      schemes:
+      - http
+      summary: del DataClient
       tags:
       - DataClient
   /swagger-ui/{filepath}:

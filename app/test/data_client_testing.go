@@ -49,7 +49,7 @@ func AddDataClientBadRequest(t goatest.TInterface, ctx context.Context, service 
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/data/%v", hash),
+		Path: fmt.Sprintf("/data/add/%v", hash),
 	}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
@@ -118,7 +118,7 @@ func AddDataClientInternalServerError(t goatest.TInterface, ctx context.Context,
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/data/%v", hash),
+		Path: fmt.Sprintf("/data/add/%v", hash),
 	}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
@@ -186,7 +186,7 @@ func AddDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.Ser
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/data/%v", hash),
+		Path: fmt.Sprintf("/data/add/%v", hash),
 	}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
@@ -248,9 +248,9 @@ func DelDataClientBadRequest(t goatest.TInterface, ctx context.Context, service 
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/data/%v", hash),
+		Path: fmt.Sprintf("/data/del/%v", hash),
 	}
-	req, err := http.NewRequest("DELETE", u.String(), nil)
+	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
 		panic("invalid test " + err.Error()) // bug
 	}
@@ -317,9 +317,9 @@ func DelDataClientInternalServerError(t goatest.TInterface, ctx context.Context,
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/data/%v", hash),
+		Path: fmt.Sprintf("/data/del/%v", hash),
 	}
-	req, err := http.NewRequest("DELETE", u.String(), nil)
+	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
 		panic("invalid test " + err.Error()) // bug
 	}
@@ -385,9 +385,9 @@ func DelDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.Ser
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/data/%v", hash),
+		Path: fmt.Sprintf("/data/del/%v", hash),
 	}
-	req, err := http.NewRequest("DELETE", u.String(), nil)
+	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
 		panic("invalid test " + err.Error()) // bug
 	}

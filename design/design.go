@@ -17,7 +17,7 @@ var _ = Resource("DataClient", func() {
 
 	Action("add", func() {
 		Description("add data hash")
-		Routing(POST("/:hash"))
+		Routing(POST("/add/:hash"))
 		Params(func() {
 			Param("hash", String, "data IPFS address")
 		})
@@ -28,7 +28,7 @@ var _ = Resource("DataClient", func() {
 
 	Action("del", func() {
 		Description("delete data hash")
-		Routing(DELETE("/:hash"))
+		Routing(POST("/del/:hash"))
 		Params(func() {
 			Param("hash", String, "data IPFS address")
 		})

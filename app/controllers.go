@@ -56,8 +56,8 @@ func MountDataClientController(service *goa.Service, ctrl DataClientController) 
 		}
 		return ctrl.Add(rctx)
 	}
-	service.Mux.Handle("POST", "/data/:hash", ctrl.MuxHandler("add", h, nil))
-	service.LogInfo("mount", "ctrl", "DataClient", "action", "Add", "route", "POST /data/:hash")
+	service.Mux.Handle("POST", "/data/add/:hash", ctrl.MuxHandler("add", h, nil))
+	service.LogInfo("mount", "ctrl", "DataClient", "action", "Add", "route", "POST /data/add/:hash")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -71,8 +71,8 @@ func MountDataClientController(service *goa.Service, ctrl DataClientController) 
 		}
 		return ctrl.Del(rctx)
 	}
-	service.Mux.Handle("DELETE", "/data/:hash", ctrl.MuxHandler("del", h, nil))
-	service.LogInfo("mount", "ctrl", "DataClient", "action", "Del", "route", "DELETE /data/:hash")
+	service.Mux.Handle("POST", "/data/del/:hash", ctrl.MuxHandler("del", h, nil))
+	service.LogInfo("mount", "ctrl", "DataClient", "action", "Del", "route", "POST /data/del/:hash")
 }
 
 // SwaggerController is the controller interface for the Swagger actions.

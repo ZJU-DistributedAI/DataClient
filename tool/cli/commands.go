@@ -59,7 +59,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 	}
 	tmp1 := new(AddDataClientCommand)
 	sub = &cobra.Command{
-		Use:   `data-client ["/data/HASH"]`,
+		Use:   `data-client ["/data/add/HASH"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp1.Run(c, args) },
 	}
@@ -73,7 +73,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 	}
 	tmp2 := new(DelDataClientCommand)
 	sub = &cobra.Command{
-		Use:   `data-client ["/data/HASH"]`,
+		Use:   `data-client ["/data/del/HASH"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp2.Run(c, args) },
 	}
@@ -300,7 +300,7 @@ func (cmd *AddDataClientCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = fmt.Sprintf("/data/%v", url.QueryEscape(cmd.Hash))
+		path = fmt.Sprintf("/data/add/%v", url.QueryEscape(cmd.Hash))
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -326,7 +326,7 @@ func (cmd *DelDataClientCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = fmt.Sprintf("/data/%v", url.QueryEscape(cmd.Hash))
+		path = fmt.Sprintf("/data/del/%v", url.QueryEscape(cmd.Hash))
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)

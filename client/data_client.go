@@ -21,7 +21,7 @@ import (
 func AddDataClientPath(hash string) string {
 	param0 := hash
 
-	return fmt.Sprintf("/data/%s", param0)
+	return fmt.Sprintf("/data/add/%s", param0)
 }
 
 // add data hash
@@ -51,7 +51,7 @@ func (c *Client) NewAddDataClientRequest(ctx context.Context, path string) (*htt
 func DelDataClientPath(hash string) string {
 	param0 := hash
 
-	return fmt.Sprintf("/data/%s", param0)
+	return fmt.Sprintf("/data/del/%s", param0)
 }
 
 // delete data hash
@@ -70,7 +70,7 @@ func (c *Client) NewDelDataClientRequest(ctx context.Context, path string) (*htt
 		scheme = "http"
 	}
 	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
-	req, err := http.NewRequest("DELETE", u.String(), nil)
+	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
 		return nil, err
 	}
