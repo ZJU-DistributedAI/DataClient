@@ -102,9 +102,9 @@ func sendTransaction(to string, gasLimite uint64, gasPirce *big.Int, value *big.
 		gasPirce,
 		[]byte(data))
 
-	//chainID := big.NewInt(int64(ChainID))
-	//signer := types.NewEIP155Signer(chainID)
-	signer := types.HomesteadSigner{}
+	chainID := big.NewInt(int64(ChainID))
+	signer := types.NewEIP155Signer(chainID)
+	//signer := types.HomesteadSigner{}
 
 	signedTx ,err:= auth.Signer(signer, auth.From, tx)
 
