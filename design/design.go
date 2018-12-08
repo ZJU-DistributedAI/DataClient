@@ -17,9 +17,10 @@ var _ = Resource("DataClient", func() {
 
 	Action("add", func() {
 		Description("add data hash")
-		Routing(POST("/add/:hash"))
+		Routing(POST("/add/:hash/:private_key"))
 		Params(func() {
 			Param("hash", String, "data IPFS address")
+			Param("private_key", String, "ETH private key for transaction")
 		})
 		Response(OK,  "plain/text")
 		Response(InternalServerError, ErrorMedia)
@@ -28,9 +29,10 @@ var _ = Resource("DataClient", func() {
 
 	Action("del", func() {
 		Description("delete data hash")
-		Routing(POST("/del/:hash"))
+		Routing(POST("/del/:hash/:private_key"))
 		Params(func() {
 			Param("hash", String, "data IPFS address")
+			Param("private_key", String, "ETH private key for transaction")
 		})
 		Response(OK,  "plain/text")
 		Response(InternalServerError, ErrorMedia)

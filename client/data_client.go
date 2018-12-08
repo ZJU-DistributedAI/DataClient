@@ -18,10 +18,11 @@ import (
 )
 
 // AddDataClientPath computes a request path to the add action of DataClient.
-func AddDataClientPath(hash string) string {
+func AddDataClientPath(hash string, privateKey string) string {
 	param0 := hash
+	param1 := privateKey
 
-	return fmt.Sprintf("/data/add/%s", param0)
+	return fmt.Sprintf("/data/add/%s/%s", param0, param1)
 }
 
 // add data hash
@@ -48,10 +49,11 @@ func (c *Client) NewAddDataClientRequest(ctx context.Context, path string) (*htt
 }
 
 // DelDataClientPath computes a request path to the del action of DataClient.
-func DelDataClientPath(hash string) string {
+func DelDataClientPath(hash string, privateKey string) string {
 	param0 := hash
+	param1 := privateKey
 
-	return fmt.Sprintf("/data/del/%s", param0)
+	return fmt.Sprintf("/data/del/%s/%s", param0, param1)
 }
 
 // delete data hash

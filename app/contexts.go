@@ -21,7 +21,8 @@ type AddDataClientContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
-	Hash string
+	Hash       string
+	PrivateKey string
 }
 
 // NewAddDataClientContext parses the incoming request URL and body, performs validations and creates the
@@ -37,6 +38,11 @@ func NewAddDataClientContext(ctx context.Context, r *http.Request, service *goa.
 	if len(paramHash) > 0 {
 		rawHash := paramHash[0]
 		rctx.Hash = rawHash
+	}
+	paramPrivateKey := req.Params["private_key"]
+	if len(paramPrivateKey) > 0 {
+		rawPrivateKey := paramPrivateKey[0]
+		rctx.PrivateKey = rawPrivateKey
 	}
 	return &rctx, err
 }
@@ -72,7 +78,8 @@ type DelDataClientContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
-	Hash string
+	Hash       string
+	PrivateKey string
 }
 
 // NewDelDataClientContext parses the incoming request URL and body, performs validations and creates the
@@ -88,6 +95,11 @@ func NewDelDataClientContext(ctx context.Context, r *http.Request, service *goa.
 	if len(paramHash) > 0 {
 		rawHash := paramHash[0]
 		rctx.Hash = rawHash
+	}
+	paramPrivateKey := req.Params["private_key"]
+	if len(paramPrivateKey) > 0 {
+		rawPrivateKey := paramPrivateKey[0]
+		rctx.PrivateKey = rawPrivateKey
 	}
 	return &rctx, err
 }

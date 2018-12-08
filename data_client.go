@@ -1,19 +1,19 @@
 package main
 
 import (
-	"DataClient/app"
 	"github.com/goadesign/goa"
-	"github.com/ethereum/go-ethereum/core/types"
 	"math/big"
-	"github.com/ethereum/go-ethereum/crypto"
-	"fmt"
-	"context"
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
-	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/ethereum/go-ethereum/common"
 	"io/ioutil"
-	"github.com/ethereum/go-ethereum/accounts/keystore"
-	"crypto/ecdsa"
+	"encoding/json"
+	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/common"
+	"DataClient/app"
+	"context"
+	"strconv"
+	"fmt"
 )
 
 type DataClientController struct {
@@ -24,74 +24,128 @@ func NewDataClientController(service *goa.Service) *DataClientController {
 	return &DataClientController{Controller: service.NewController("DataClientController")}
 }
 
-var used_key_file = true
-var keyStoreDir 	= "UTC--2018-12-02T05-46-18.847380197Z--8bcf2f7c9445a5768d7ec98658fa317eb8be1cc8"
-var privateKeyStr 	= "9eefbcbd4e6061d49722fe04f9f14127aa2bed5160202c009549c73c4099445a"
-var ETH_HOST 		= "http://47.52.163.119:8545"
-var password  		= "   "
-var ChainID 		= 999
+
+type DataClientConfig struct {
+	// add info
+	Add_to_address		string
+	Add_data_prefix		string
+
+	// del info
+	Del_to_address		string
+	Del_data_prefix		string
+
+	// public info
+	ETH_HOST 			string
+	Value 				string
+	Gas_price			string
+	Gas_limit			string
+}
+
 
 func (c *DataClientController) Add(ctx *app.AddDataClientContext) error {
-
-	if len(ctx.Hash) != 46 {
+	// check
+	if check_valid_arguments(ctx.Hash, ctx.PrivateKey) == false {
 		return ctx.BadRequest(
-			goa.ErrBadRequest("Hash invalid!"))
+			goa.ErrBadRequest("Invalid arguments!"))
+	}
+	// read config
+	config := read_config()
+	if config == nil{
+		goa.LogInfo(context.Background(), "Config of data client error")
+		return ctx.InternalServerError(
+			goa.ErrInternal("Config of data client error"))
 	}
 
-	var to = "4a09e270bf5bae6ccda090cea401fae587b87ba6"
-	value := big.NewInt(0x0)
-	gasPrice := big.NewInt(200000000)
-	gasLimit := uint64(0xfffff)
-	data := "add " + ctx.Hash
-
-	transactionHash, err := sendTransaction(to, gasLimit, gasPrice, value, data)
+	// generate transaction
+	tx, err := generate_transaction("add", ctx.Hash, ctx.PrivateKey, config)
 	if err != nil{
 		return ctx.InternalServerError(
-			goa.ErrInternal("Fail to send transation"))
+			goa.ErrInternal("Generate transaction failed!"))
 	}
 
+	// sign transaction
+	signedTx, err := signTransaction(tx, ctx.PrivateKey)
+	if err != nil{
+		return ctx.InternalServerError(
+			goa.ErrInternal("Fail to sign transaction"))
+	}
+	// send transaction
+	transactionHash, err := sendTransaction(signedTx, config.ETH_HOST)
+	if err != nil{
+		return ctx.InternalServerError(
+			goa.ErrInternal("Fail to send transaction"))
+	}
 	return ctx.OK([]byte(transactionHash))
 }
 
 
 func (c *DataClientController) Del(ctx *app.DelDataClientContext) error {
+	// check
+	if check_valid_arguments(ctx.Hash, ctx.PrivateKey)  {
+		return ctx.BadRequest(
+			goa.ErrBadRequest("Invalid arguments!"))
+	}
 
+	// read config
+	config := read_config()
+	if config == nil{
+		goa.LogInfo(context.Background(), "Config of data client error")
+		return ctx.InternalServerError(
+			goa.ErrInternal("Config of data client error"))
+	}
 
-	return nil
+	// generate transaction
+	tx, err := generate_transaction("del", ctx.Hash, ctx.PrivateKey, config)
+	if err != nil{
+		return ctx.BadRequest(
+			goa.ErrBadRequest("Generate transaction failed!"))
+	}
+
+	// sign transaction
+	signedTx, err := signTransaction(tx, ctx.PrivateKey)
+	if err != nil{
+		return ctx.InternalServerError(
+			goa.ErrInternal("Fail to sign transaction"))
+	}
+
+	// send transaction
+	transactionHash, err := sendTransaction(signedTx, config.ETH_HOST)
+	if err != nil{
+		return ctx.InternalServerError(
+			goa.ErrInternal("Fail to send transaction"))
+	}
+	return ctx.OK([]byte(transactionHash))
 }
 
-func sendTransaction(to string, gasLimite uint64, gasPirce *big.Int, value *big.Int, data string) (string ,error){
-	var fromPrivkey *ecdsa.PrivateKey
-	if used_key_file {
-		fromKeystore,err := ioutil.ReadFile(keyStoreDir)
-		if err != nil{
-			fmt.Println("Read key fail")
-			return "",err
-		}
-		fromKey,err := keystore.DecryptKey(fromKeystore, password)
-		fromPrivkey = fromKey.PrivateKey
-	} else{
-		privkey,err := crypto.HexToECDSA(privateKeyStr)
-		if err != nil{
-			fmt.Println("Get key fail")
-			return "",err
-		}
-		fromPrivkey = privkey
+func generate_transaction(op string, hash string, private_key_str string, config * DataClientConfig) (*types.Transaction, error){
+
+	// get paraments of  transaction
+	value, gasLimite, gasPrice, err := trans_type(config)
+	if err != nil{
+		return new(types.Transaction), err
 	}
 
-	client, err := ethclient.Dial(ETH_HOST)
+	// get valid nonce
+	privity_key,err := crypto.HexToECDSA(private_key_str)
+	if err != nil{
+		return new(types.Transaction), err
+	}
+	client, err := ethclient.Dial(config.ETH_HOST)
 	if err != nil {
-		fmt.Println("client connection error")
-		return "",err
+		return new(types.Transaction),err
 	}
-	nonce, err := client.PendingNonceAt(context.Background(), crypto.PubkeyToAddress(fromPrivkey.PublicKey))
+	nonce, err := client.PendingNonceAt(context.Background(), crypto.PubkeyToAddress(privity_key.PublicKey))
+	if err != nil {
+		return new(types.Transaction),err
+	}
 
-	auth := bind.NewKeyedTransactor(fromPrivkey)
-	auth.Nonce = big.NewInt(int64(nonce))
-	auth.Value = value
-	auth.GasLimit = gasLimite
-	auth.GasPrice = gasPirce
-	auth.From = crypto.PubkeyToAddress(fromPrivkey.PublicKey)
+	// data
+	to := config.Add_to_address
+	data := config.Add_data_prefix + hash
+	if op != "add"{
+		to 		= config.Del_to_address
+		data	= config.Del_data_prefix + hash
+	}
 
 	// a new Transaction
 	tx := types.NewTransaction(
@@ -99,24 +153,107 @@ func sendTransaction(to string, gasLimite uint64, gasPirce *big.Int, value *big.
 		common.HexToAddress(to),
 		value,
 		gasLimite,
-		gasPirce,
+		gasPrice,
 		[]byte(data))
 
-	chainID := big.NewInt(int64(ChainID))
-	signer := types.NewEIP155Signer(chainID)
-	//signer := types.HomesteadSigner{}
-
-	signedTx ,err:= auth.Signer(signer, auth.From, tx)
-
-	txErr := client.SendTransaction(context.Background(), signedTx)
-	fmt.Println(client.BalanceAt(context.Background(), crypto.PubkeyToAddress(fromPrivkey.PublicKey), nil))
-	if txErr != nil {
-		fmt.Println("send tx error")
-		panic(txErr)
-		return "",txErr
-	}
-	fmt.Println(signedTx.Hash().String())
-	bind.WaitMined(context.Background(), client, signedTx)
-	return signedTx.Hash().String(), nil
+	return tx, nil
 }
 
+func trans_type(config *DataClientConfig)( *big.Int, uint64, *big.Int, error){
+
+	// trans value
+	value, err := new(big.Int).SetString(config.Value, 10)
+	if err == false{
+		goa.LogInfo(context.Background(), "Trans value failed")
+		return new(big.Int), uint64(0), new(big.Int), fmt.Errorf("Trans value failed")
+	}
+
+	// trans gasLimit
+	gas_limit, err_gas :=  strconv.ParseInt(config.Gas_limit, 16, 64)
+	if err_gas != nil{
+		goa.LogInfo(context.Background(), "Trans value failed")
+		return new(big.Int), uint64(0), new(big.Int), fmt.Errorf("Trans value failed")
+	}
+	gasLimit := uint64(gas_limit)
+
+	// trans gasPrice
+	gasPrice, err_price := new(big.Int).SetString(config.Gas_price, 10)
+	if err_price == false{
+		goa.LogInfo(context.Background(), "Trans gasPrice failed")
+		return new(big.Int), uint64(0), new(big.Int), fmt.Errorf("Trans gasPrice failed")
+	}
+
+	return value, gasLimit, gasPrice, nil
+}
+
+func check_valid_arguments(hash string, private_key string) bool{
+	// easy check
+	if len(hash) != 46 || len(private_key) != 64{
+		return false
+	}
+	return true
+}
+
+func read_config() *DataClientConfig{
+
+	// read file
+	config_json,err := ioutil.ReadFile("config.json")
+	if err != nil{
+		return nil
+	}
+
+	// parse json string
+	config := &DataClientConfig{}
+	err = json.Unmarshal([]byte(config_json), &config)
+	if err != nil{
+		return nil
+	}
+
+	return config
+}
+
+func signTransaction(transaction * types.Transaction, private_key_str string) (*types.Transaction, error){
+
+	// get private key
+	privity_key,err := crypto.HexToECDSA(private_key_str)
+	if err != nil{
+		return new(types.Transaction), err
+	}
+
+	// get auth for sign
+	auth := bind.NewKeyedTransactor(privity_key)
+	auth.Nonce = big.NewInt(int64(transaction.Nonce()))
+	auth.Value = transaction.Value()
+	auth.GasLimit = transaction.Gas()
+	auth.GasPrice = transaction.GasPrice()
+	auth.From = crypto.PubkeyToAddress(privity_key.PublicKey)
+
+	//chainID := big.NewInt(int64(ChainID))
+	//signer := types.NewEIP155Signer(chainID)
+
+	// sign
+	signer := types.HomesteadSigner{}
+	signedTx ,err:= auth.Signer(signer, auth.From, transaction)
+	return signedTx, err
+}
+
+func sendTransaction(signedTx * types.Transaction, ETH_HOST string) (string, error) {
+	// get client
+	client, err := ethclient.Dial(ETH_HOST)
+	if err != nil {
+		return "",err
+	}
+
+	// send
+	txErr := client.SendTransaction(context.Background(), signedTx)
+	if txErr != nil {
+		return "",txErr
+	}
+
+	_, bind_err := bind.WaitMined(context.Background(), client, signedTx)
+	if bind_err != nil{
+		return "",bind_err
+	}
+
+	return signedTx.Hash().String(), nil
+}

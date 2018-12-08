@@ -47,7 +47,7 @@ info:
   title: Data client to add or delete data
   version: ""
 paths:
-  /data/add/{hash}:
+  /data/add/{hash}/{private_key}:
     post:
       description: add data hash
       operationId: DataClient#add
@@ -55,6 +55,11 @@ paths:
       - description: data IPFS address
         in: path
         name: hash
+        required: true
+        type: string
+      - description: ETH private key for transaction
+        in: path
+        name: private_key
         required: true
         type: string
       produces:
@@ -76,7 +81,7 @@ paths:
       summary: add DataClient
       tags:
       - DataClient
-  /data/del/{hash}:
+  /data/del/{hash}/{private_key}:
     post:
       description: delete data hash
       operationId: DataClient#del
@@ -84,6 +89,11 @@ paths:
       - description: data IPFS address
         in: path
         name: hash
+        required: true
+        type: string
+      - description: ETH private key for transaction
+        in: path
+        name: private_key
         required: true
         type: string
       produces:

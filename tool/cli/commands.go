@@ -32,14 +32,18 @@ type (
 	// AddDataClientCommand is the command line data structure for the add action of DataClient
 	AddDataClientCommand struct {
 		// data IPFS address
-		Hash        string
+		Hash string
+		// ETH private key for transaction
+		PrivateKey  string
 		PrettyPrint bool
 	}
 
 	// DelDataClientCommand is the command line data structure for the del action of DataClient
 	DelDataClientCommand struct {
 		// data IPFS address
-		Hash        string
+		Hash string
+		// ETH private key for transaction
+		PrivateKey  string
 		PrettyPrint bool
 	}
 
@@ -59,7 +63,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 	}
 	tmp1 := new(AddDataClientCommand)
 	sub = &cobra.Command{
-		Use:   `data-client ["/data/add/HASH"]`,
+		Use:   `data-client ["/data/add/HASH/PRIVATE_KEY"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp1.Run(c, args) },
 	}
@@ -73,7 +77,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 	}
 	tmp2 := new(DelDataClientCommand)
 	sub = &cobra.Command{
-		Use:   `data-client ["/data/del/HASH"]`,
+		Use:   `data-client ["/data/del/HASH/PRIVATE_KEY"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp2.Run(c, args) },
 	}
@@ -300,7 +304,7 @@ func (cmd *AddDataClientCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = fmt.Sprintf("/data/add/%v", url.QueryEscape(cmd.Hash))
+		path = fmt.Sprintf("/data/add/%v/%v", url.QueryEscape(cmd.Hash), url.QueryEscape(cmd.PrivateKey))
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -318,6 +322,8 @@ func (cmd *AddDataClientCommand) Run(c *client.Client, args []string) error {
 func (cmd *AddDataClientCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	var hash string
 	cc.Flags().StringVar(&cmd.Hash, "hash", hash, `data IPFS address`)
+	var privateKey string
+	cc.Flags().StringVar(&cmd.PrivateKey, "private_key", privateKey, `ETH private key for transaction`)
 }
 
 // Run makes the HTTP request corresponding to the DelDataClientCommand command.
@@ -326,7 +332,7 @@ func (cmd *DelDataClientCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = fmt.Sprintf("/data/del/%v", url.QueryEscape(cmd.Hash))
+		path = fmt.Sprintf("/data/del/%v/%v", url.QueryEscape(cmd.Hash), url.QueryEscape(cmd.PrivateKey))
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -344,4 +350,6 @@ func (cmd *DelDataClientCommand) Run(c *client.Client, args []string) error {
 func (cmd *DelDataClientCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	var hash string
 	cc.Flags().StringVar(&cmd.Hash, "hash", hash, `data IPFS address`)
+	var privateKey string
+	cc.Flags().StringVar(&cmd.PrivateKey, "private_key", privateKey, `ETH private key for transaction`)
 }

@@ -1,0 +1,13 @@
+{
+
+  "Add_to_address"    : "4a09e270bf5bae6ccda090cea401fae587b87ba6",
+  "Add_data_prefix"   : "add ",
+
+  "Del_to_address"    : "4a09e270bf5bae6ccda090cea401fae587b87ba6",
+  "Del_data_prefix"   : "del ",
+
+  "ETH_HOST"          : "http://47.52.163.119:8545",
+  "Value"             : "0",
+  "Gas_price"         : "200000000",
+  "Gas_limit"         : "ffffff"
+}

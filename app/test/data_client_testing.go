@@ -28,7 +28,7 @@ import (
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func AddDataClientBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string) (http.ResponseWriter, error) {
+func AddDataClientBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string, privateKey string) (http.ResponseWriter, error) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -49,7 +49,7 @@ func AddDataClientBadRequest(t goatest.TInterface, ctx context.Context, service 
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/data/add/%v", hash),
+		Path: fmt.Sprintf("/data/add/%v/%v", hash, privateKey),
 	}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
@@ -57,6 +57,7 @@ func AddDataClientBadRequest(t goatest.TInterface, ctx context.Context, service 
 	}
 	prms := url.Values{}
 	prms["hash"] = []string{fmt.Sprintf("%v", hash)}
+	prms["private_key"] = []string{fmt.Sprintf("%v", privateKey)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -97,7 +98,7 @@ func AddDataClientBadRequest(t goatest.TInterface, ctx context.Context, service 
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func AddDataClientInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string) (http.ResponseWriter, error) {
+func AddDataClientInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string, privateKey string) (http.ResponseWriter, error) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -118,7 +119,7 @@ func AddDataClientInternalServerError(t goatest.TInterface, ctx context.Context,
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/data/add/%v", hash),
+		Path: fmt.Sprintf("/data/add/%v/%v", hash, privateKey),
 	}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
@@ -126,6 +127,7 @@ func AddDataClientInternalServerError(t goatest.TInterface, ctx context.Context,
 	}
 	prms := url.Values{}
 	prms["hash"] = []string{fmt.Sprintf("%v", hash)}
+	prms["private_key"] = []string{fmt.Sprintf("%v", privateKey)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -166,7 +168,7 @@ func AddDataClientInternalServerError(t goatest.TInterface, ctx context.Context,
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func AddDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string) http.ResponseWriter {
+func AddDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string, privateKey string) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -186,7 +188,7 @@ func AddDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.Ser
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/data/add/%v", hash),
+		Path: fmt.Sprintf("/data/add/%v/%v", hash, privateKey),
 	}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
@@ -194,6 +196,7 @@ func AddDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.Ser
 	}
 	prms := url.Values{}
 	prms["hash"] = []string{fmt.Sprintf("%v", hash)}
+	prms["private_key"] = []string{fmt.Sprintf("%v", privateKey)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -227,7 +230,7 @@ func AddDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.Ser
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func DelDataClientBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string) (http.ResponseWriter, error) {
+func DelDataClientBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string, privateKey string) (http.ResponseWriter, error) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -248,7 +251,7 @@ func DelDataClientBadRequest(t goatest.TInterface, ctx context.Context, service 
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/data/del/%v", hash),
+		Path: fmt.Sprintf("/data/del/%v/%v", hash, privateKey),
 	}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
@@ -256,6 +259,7 @@ func DelDataClientBadRequest(t goatest.TInterface, ctx context.Context, service 
 	}
 	prms := url.Values{}
 	prms["hash"] = []string{fmt.Sprintf("%v", hash)}
+	prms["private_key"] = []string{fmt.Sprintf("%v", privateKey)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -296,7 +300,7 @@ func DelDataClientBadRequest(t goatest.TInterface, ctx context.Context, service 
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func DelDataClientInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string) (http.ResponseWriter, error) {
+func DelDataClientInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string, privateKey string) (http.ResponseWriter, error) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -317,7 +321,7 @@ func DelDataClientInternalServerError(t goatest.TInterface, ctx context.Context,
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/data/del/%v", hash),
+		Path: fmt.Sprintf("/data/del/%v/%v", hash, privateKey),
 	}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
@@ -325,6 +329,7 @@ func DelDataClientInternalServerError(t goatest.TInterface, ctx context.Context,
 	}
 	prms := url.Values{}
 	prms["hash"] = []string{fmt.Sprintf("%v", hash)}
+	prms["private_key"] = []string{fmt.Sprintf("%v", privateKey)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -365,7 +370,7 @@ func DelDataClientInternalServerError(t goatest.TInterface, ctx context.Context,
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func DelDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string) http.ResponseWriter {
+func DelDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string, privateKey string) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -385,7 +390,7 @@ func DelDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.Ser
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/data/del/%v", hash),
+		Path: fmt.Sprintf("/data/del/%v/%v", hash, privateKey),
 	}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
@@ -393,6 +398,7 @@ func DelDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.Ser
 	}
 	prms := url.Values{}
 	prms["hash"] = []string{fmt.Sprintf("%v", hash)}
+	prms["private_key"] = []string{fmt.Sprintf("%v", privateKey)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
