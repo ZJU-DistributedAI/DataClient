@@ -2,20 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0d59a559-5025-44db-bc2b-dee05c4e8a2b" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/config.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UTC--2018-12-02T05-46-18.847380197Z--8bcf2f7c9445a5768d7ec98658fa317eb8be1cc8" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/UTC--2018-12-02T05-46-32.175470146Z--4a09e270bf5bae6ccda090cea401fae587b87ba6" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/contexts.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/contexts.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controllers.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/test/data_client_testing.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/test/data_client_testing.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/data_client.go" beforeDir="false" afterPath="$PROJECT_DIR$/client/data_client.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data-client.exe" beforeDir="false" afterPath="$PROJECT_DIR$/data-client.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data_client.go" beforeDir="false" afterPath="$PROJECT_DIR$/data_client.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/design/design.go" beforeDir="false" afterPath="$PROJECT_DIR$/design/design.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swagger/swagger.json" beforeDir="false" afterPath="$PROJECT_DIR$/swagger/swagger.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swagger/swagger.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/swagger/swagger.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tool/cli/commands.go" beforeDir="false" afterPath="$PROJECT_DIR$/tool/cli/commands.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -29,7 +18,7 @@
       <file leaf-file-name="design.go" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/design/design.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-67">
+            <state relative-caret-position="306">
               <caret line="20" column="23" selection-start-line="20" selection-start-column="23" selection-end-line="20" selection-end-column="23" />
               <folding>
                 <element signature="e#119#252#0" expanded="true" />
@@ -41,36 +30,15 @@
       <file leaf-file-name="data_client.go" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/data_client.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="545">
-              <caret line="139" column="5" selection-start-line="139" selection-start-column="5" selection-end-line="139" selection-end-column="5" />
+            <state relative-caret-position="254">
+              <caret line="83" column="63" selection-start-line="83" selection-start-column="63" selection-end-line="83" selection-end-column="63" />
               <folding>
-                <element signature="e#14#341#0" expanded="true" />
-                <element signature="e#880#1110#0" />
-                <element signature="n#!!block;n#Del#0" />
+                <element signature="n#!!block;n#Add#0" />
                 <element signature="n#!!block;n#trans_type#0" />
                 <element signature="n#!!block;n#check_valid_arguments#0" />
                 <element signature="n#!!block;n#read_config#0" />
-                <element signature="n#!!block;n#signTransaction#0" />
-                <element signature="n#!!block;n#signTransaction#1" />
+                <element signature="n#!!block;n#sendTransaction#0" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/README.md">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="12" selection-start-column="12" selection-end-column="12" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="config.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/config.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="11" column="25" selection-start-line="11" selection-start-column="25" selection-end-line="11" selection-end-column="25" />
             </state>
           </provider>
         </entry>
@@ -117,7 +85,7 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="94" />
     <option name="y" value="132" />
     <option name="width" value="1612" />
@@ -231,15 +199,15 @@
     <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1359275" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1369936" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3290461" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.50053304" side_tool="true" weight="0.19506967" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Version Control" order="7" weight="0.3290461" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.24222937" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="7" sideWeight="0.49946696" visible="true" weight="0.26259378" />
+      <window_info anchor="bottom" id="Terminal" order="7" sideWeight="0.49946696" visible="true" weight="0.26259378" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39885056" />
       <window_info anchor="bottom" id="Thumbnails" order="8" weight="0.32988507" />
@@ -260,10 +228,48 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="5" />
+      <option name="time" value="6" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/design/design.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="20" column="23" selection-start-line="20" selection-start-column="23" selection-end-line="20" selection-end-column="23" />
+          <folding>
+            <element signature="e#119#252#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="12" selection-start-column="12" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="11" column="25" selection-start-line="11" selection-start-column="25" selection-end-line="11" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data_client.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2142">
+          <caret line="119" column="128" selection-start-line="119" selection-start-column="128" selection-end-line="119" selection-end-column="128" />
+          <folding>
+            <element signature="n#!!block;n#Add#0" />
+            <element signature="n#!!block;n#trans_type#0" />
+            <element signature="n#!!block;n#check_valid_arguments#0" />
+            <element signature="n#!!block;n#read_config#0" />
+            <element signature="n#!!block;n#sendTransaction#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/design/design.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="558">
@@ -286,14 +292,11 @@
         <state relative-caret-position="612">
           <caret line="34" lean-forward="true" selection-start-line="34" selection-end-line="34" />
           <folding>
-            <element signature="e#14#341#0" expanded="true" />
-            <element signature="e#880#1110#0" />
-            <element signature="n#!!block;n#Del#0" />
+            <element signature="n#!!block;n#Add#0" />
             <element signature="n#!!block;n#trans_type#0" />
             <element signature="n#!!block;n#check_valid_arguments#0" />
             <element signature="n#!!block;n#read_config#0" />
-            <element signature="n#!!block;n#signTransaction#0" />
-            <element signature="n#!!block;n#signTransaction#1" />
+            <element signature="n#!!block;n#sendTransaction#0" />
           </folding>
         </state>
       </provider>
@@ -472,16 +475,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="8" selection-start-line="8" selection-end-line="22" selection-end-column="1" />
-          <folding>
-            <element signature="e#14#73#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/test.go" />
     <entry file="file://$PROJECT_DIR$/../../../Go/bin/src/github.com/ethereum/go-ethereum/accounts/abi/bind/util.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
@@ -496,16 +490,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="12" selection-start-column="12" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/design/design.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-67">
+        <state relative-caret-position="306">
           <caret line="20" column="23" selection-start-line="20" selection-start-column="23" selection-end-line="20" selection-end-column="23" />
           <folding>
             <element signature="e#119#252#0" expanded="true" />
@@ -520,19 +507,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="12" selection-start-column="12" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/data_client.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="545">
-          <caret line="139" column="5" selection-start-line="139" selection-start-column="5" selection-end-line="139" selection-end-column="5" />
+        <state relative-caret-position="254">
+          <caret line="83" column="63" selection-start-line="83" selection-start-column="63" selection-end-line="83" selection-end-column="63" />
           <folding>
-            <element signature="e#14#341#0" expanded="true" />
-            <element signature="e#880#1110#0" />
-            <element signature="n#!!block;n#Del#0" />
+            <element signature="n#!!block;n#Add#0" />
             <element signature="n#!!block;n#trans_type#0" />
             <element signature="n#!!block;n#check_valid_arguments#0" />
             <element signature="n#!!block;n#read_config#0" />
-            <element signature="n#!!block;n#signTransaction#0" />
-            <element signature="n#!!block;n#signTransaction#1" />
+            <element signature="n#!!block;n#sendTransaction#0" />
           </folding>
         </state>
       </provider>

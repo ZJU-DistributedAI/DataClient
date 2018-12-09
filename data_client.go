@@ -81,7 +81,7 @@ func (c *DataClientController) Add(ctx *app.AddDataClientContext) error {
 
 func (c *DataClientController) Del(ctx *app.DelDataClientContext) error {
 	// check
-	if check_valid_arguments(ctx.Hash, ctx.PrivateKey)  {
+	if check_valid_arguments(ctx.Hash, ctx.PrivateKey) == false {
 		return ctx.BadRequest(
 			goa.ErrBadRequest("Invalid arguments!"))
 	}
@@ -125,6 +125,15 @@ func generate_transaction(op string, hash string, private_key_str string, config
 		return new(types.Transaction), err
 	}
 
+	// data
+	to := config.Add_to_address
+	data := config.Add_data_prefix + hash
+	if op != "add"{
+		to 		= config.Del_to_address
+		data	= config.Del_data_prefix + hash
+	}
+	fmt.Println(data)
+
 	// get valid nonce
 	privity_key,err := crypto.HexToECDSA(private_key_str)
 	if err != nil{
@@ -137,14 +146,6 @@ func generate_transaction(op string, hash string, private_key_str string, config
 	nonce, err := client.PendingNonceAt(context.Background(), crypto.PubkeyToAddress(privity_key.PublicKey))
 	if err != nil {
 		return new(types.Transaction),err
-	}
-
-	// data
-	to := config.Add_to_address
-	data := config.Add_data_prefix + hash
-	if op != "add"{
-		to 		= config.Del_to_address
-		data	= config.Del_data_prefix + hash
 	}
 
 	// a new Transaction
