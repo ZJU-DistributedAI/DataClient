@@ -81,6 +81,79 @@ paths:
       summary: add DataClient
       tags:
       - DataClient
+  /data/agree/{ETH_key}/{request_id}:
+    post:
+      description: agree data request for request [ID]
+      operationId: DataClient#agree
+      parameters:
+      - description: ETH private key for transaction
+        in: path
+        name: ETH_key
+        required: true
+        type: string
+      - description: request[ID]
+        in: path
+        name: request_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      - plain/text
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/error'
+      schemes:
+      - http
+      summary: agree DataClient
+      tags:
+      - DataClient
+  /data/askComputing/{hash}/{ETH_key}/{request_id}:
+    post:
+      description: ask for computing for [request_id] on computing resourse[hash]
+      operationId: DataClient#askComputing
+      parameters:
+      - description: ETH private key for transaction
+        in: path
+        name: ETH_key
+        required: true
+        type: string
+      - description: computing resourse hash
+        in: path
+        name: hash
+        required: true
+        type: string
+      - description: request[ID]
+        in: path
+        name: request_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      - plain/text
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/error'
+      schemes:
+      - http
+      summary: askComputing DataClient
+      tags:
+      - DataClient
   /data/del/{hash}/{private_key}:
     post:
       description: delete data hash
@@ -113,6 +186,45 @@ paths:
       schemes:
       - http
       summary: del DataClient
+      tags:
+      - DataClient
+  /data/upload/{hash}/{ETH_key}/{request_id}:
+    post:
+      description: upload encrypted data[hash] for [request_id]
+      operationId: DataClient#uploadData
+      parameters:
+      - description: ETH private key for transaction
+        in: path
+        name: ETH_key
+        required: true
+        type: string
+      - description: encrypted data hash
+        in: path
+        name: hash
+        required: true
+        type: string
+      - description: request[ID]
+        in: path
+        name: request_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      - plain/text
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/error'
+      schemes:
+      - http
+      summary: uploadData DataClient
       tags:
       - DataClient
   /swagger-ui/{filepath}:

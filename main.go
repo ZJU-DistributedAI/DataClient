@@ -10,7 +10,7 @@ import (
 
 func main() {
 	// Create service
-	service := goa.New("Data Client")
+	service := goa.New("DataClient")
 
 	// Mount middleware
 	service.Use(middleware.RequestID())

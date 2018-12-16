@@ -16,14 +16,15 @@ import (
 	"fmt"
 )
 
+// DataClientController implements the DataClient resource.
 type DataClientController struct {
 	*goa.Controller
 }
 
+// NewDataClientController creates a DataClient controller.
 func NewDataClientController(service *goa.Service) *DataClientController {
 	return &DataClientController{Controller: service.NewController("DataClientController")}
 }
-
 
 type DataClientConfig struct {
 	// add info
@@ -42,6 +43,7 @@ type DataClientConfig struct {
 }
 
 
+// Add runs the add action.
 func (c *DataClientController) Add(ctx *app.AddDataClientContext) error {
 	// check
 	if check_valid_arguments(ctx.Hash, ctx.PrivateKey) == false {
@@ -78,8 +80,29 @@ func (c *DataClientController) Add(ctx *app.AddDataClientContext) error {
 	return ctx.OK([]byte(transactionHash))
 }
 
+// Agree runs the agree action.
+func (c *DataClientController) Agree(ctx *app.AgreeDataClientContext) error {
+	// DataClientController_Agree: start_implement
 
+	// Put your logic here
+
+	return nil
+	// DataClientController_Agree: end_implement
+}
+
+// AskComputing runs the askComputing action.
+func (c *DataClientController) AskComputing(ctx *app.AskComputingDataClientContext) error {
+	// DataClientController_AskComputing: start_implement
+
+	// Put your logic here
+
+	return nil
+	// DataClientController_AskComputing: end_implement
+}
+
+// Del runs the del action.
 func (c *DataClientController) Del(ctx *app.DelDataClientContext) error {
+
 	// check
 	if check_valid_arguments(ctx.Hash, ctx.PrivateKey) == false {
 		return ctx.BadRequest(
@@ -116,6 +139,17 @@ func (c *DataClientController) Del(ctx *app.DelDataClientContext) error {
 	}
 	return ctx.OK([]byte(transactionHash))
 }
+
+// UploadData runs the uploadData action.
+func (c *DataClientController) UploadData(ctx *app.UploadDataDataClientContext) error {
+	// DataClientController_UploadData: start_implement
+
+	// Put your logic here
+
+	return nil
+	// DataClientController_UploadData: end_implement
+}
+
 
 func generate_transaction(op string, hash string, private_key_str string, config * DataClientConfig) (*types.Transaction, error){
 

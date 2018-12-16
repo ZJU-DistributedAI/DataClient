@@ -5,12 +5,19 @@ import (
 	. "github.com/goadesign/goa/design/apidsl"
 )
 
-var _ = API("Data Client", func() {
+var _ = API("DataClient", func() {
 	Title("Data client to add or delete data")
 	Description("Add or delete data")
 	Scheme("http")
 	Host("localhost:2626")
 })
+
+/*
+********************************************************
+(1)  Data client
+********************************************************
+ */
+
 
 var _ = Resource("DataClient", func() {
 	BasePath("/data")
@@ -39,6 +46,44 @@ var _ = Resource("DataClient", func() {
 		Response(BadRequest, ErrorMedia)
 	})
 
+	Action("agree", func() {
+		Description("agree data request for request [ID]")
+		Routing(POST("/agree/:ETH_key/:request_id"))
+		Params(func() {
+			Param("ETH_key", String, "ETH private key for transaction")
+			Param("request_id", Integer, "request[ID]")
+		})
+		Response(OK,  "plain/text")
+		Response(InternalServerError, ErrorMedia)
+		Response(BadRequest, ErrorMedia)
+	})
+
+	Action("askComputing", func() {
+		Description("ask for computing for [request_id] on computing resourse[hash]")
+		Routing(POST("/askComputing/:hash/:ETH_key/:request_id"))
+		Params(func() {
+			Param("hash", String, "computing resourse hash")
+			Param("ETH_key", String, "ETH private key for transaction")
+			Param("request_id", Integer, "request[ID]")
+		})
+		Response(OK,  "plain/text")
+		Response(InternalServerError, ErrorMedia)
+		Response(BadRequest, ErrorMedia)
+	})
+
+	Action("uploadData", func() {
+		Description("upload encrypted data[hash] for [request_id]")
+		Routing(POST("/upload/:hash/:ETH_key/:request_id"))
+		Params(func() {
+			Param("hash", String, "encrypted data hash")
+			Param("ETH_key", String, "ETH private key for transaction")
+			Param("request_id", Integer, "request[ID]")
+
+		})
+		Response(OK,  "plain/text")
+		Response(InternalServerError, ErrorMedia)
+		Response(BadRequest, ErrorMedia)
+	})
 })
 
 var _ = Resource("swagger", func() {
