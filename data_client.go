@@ -82,22 +82,16 @@ func (c *DataClientController) Add(ctx *app.AddDataClientContext) error {
 
 // Agree runs the agree action.
 func (c *DataClientController) Agree(ctx *app.AgreeDataClientContext) error {
-	// DataClientController_Agree: start_implement
 
-	// Put your logic here
 
-	return nil
-	// DataClientController_Agree: end_implement
+	return ctx.OK([]byte("Transaction ID of ETH"))
 }
 
 // AskComputing runs the askComputing action.
 func (c *DataClientController) AskComputing(ctx *app.AskComputingDataClientContext) error {
-	// DataClientController_AskComputing: start_implement
 
-	// Put your logic here
 
-	return nil
-	// DataClientController_AskComputing: end_implement
+	return ctx.OK([]byte("Transaction ID of ETH"))
 }
 
 // Del runs the del action.
@@ -142,12 +136,9 @@ func (c *DataClientController) Del(ctx *app.DelDataClientContext) error {
 
 // UploadData runs the uploadData action.
 func (c *DataClientController) UploadData(ctx *app.UploadDataDataClientContext) error {
-	// DataClientController_UploadData: start_implement
 
-	// Put your logic here
 
-	return nil
-	// DataClientController_UploadData: end_implement
+	return ctx.OK([]byte("Transaction ID of ETH"))
 }
 
 
