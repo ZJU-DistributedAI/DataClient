@@ -31,10 +31,10 @@ import (
 type (
 	// AddDataClientCommand is the command line data structure for the add action of DataClient
 	AddDataClientCommand struct {
-		// data IPFS address
-		Hash string
 		// ETH private key for transaction
-		PrivateKey  string
+		ETHKey string
+		// data IPFS address
+		Hash        string
 		PrettyPrint bool
 	}
 
@@ -42,8 +42,10 @@ type (
 	AgreeDataClientCommand struct {
 		// ETH private key for transaction
 		ETHKey string
-		// request[ID]
-		RequestID   int
+		// smart contract hash
+		ContractHash string
+		// data hash
+		DataHash    string
 		PrettyPrint bool
 	}
 
@@ -52,18 +54,20 @@ type (
 		// ETH private key for transaction
 		ETHKey string
 		// computing resourse hash
-		Hash string
-		// request[ID]
-		RequestID   int
+		ComputingHash string
+		// smart contract hash
+		ContractHash string
+		// ETH public key(Wallet address)
+		PublicKey   string
 		PrettyPrint bool
 	}
 
 	// DelDataClientCommand is the command line data structure for the del action of DataClient
 	DelDataClientCommand struct {
-		// data IPFS address
-		Hash string
 		// ETH private key for transaction
-		PrivateKey  string
+		ETHKey string
+		// data IPFS address
+		Hash        string
 		PrettyPrint bool
 	}
 
@@ -71,11 +75,13 @@ type (
 	UploadDataDataClientCommand struct {
 		// ETH private key for transaction
 		ETHKey string
+		// smart contract hash
+		ContractHash string
+		// data hash
+		DataHash string
 		// encrypted data hash
-		Hash string
-		// request[ID]
-		RequestID   int
-		PrettyPrint bool
+		EncryptDataHash string
+		PrettyPrint     bool
 	}
 
 	// DownloadCommand is the command line data structure for the download command.
@@ -94,7 +100,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 	}
 	tmp1 := new(AddDataClientCommand)
 	sub = &cobra.Command{
-		Use:   `data-client ["/data/add/HASH/PRIVATE_KEY"]`,
+		Use:   `data-client ["/data/add/HASH/ETH_KEY"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp1.Run(c, args) },
 	}
@@ -104,11 +110,11 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 	app.AddCommand(command)
 	command = &cobra.Command{
 		Use:   "agree",
-		Short: `agree data request for request [ID]`,
+		Short: `agree data request`,
 	}
 	tmp2 := new(AgreeDataClientCommand)
 	sub = &cobra.Command{
-		Use:   `data-client ["/data/agree/ETH_KEY/REQUEST_ID"]`,
+		Use:   `data-client ["/data/agree/ETH_KEY/DATA_HASH/CONTRACT_HASH"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp2.Run(c, args) },
 	}
@@ -118,11 +124,11 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 	app.AddCommand(command)
 	command = &cobra.Command{
 		Use:   "ask-computing",
-		Short: `ask for computing for [request_id] on computing resourse[hash]`,
+		Short: `ask for computing for data request`,
 	}
 	tmp3 := new(AskComputingDataClientCommand)
 	sub = &cobra.Command{
-		Use:   `data-client ["/data/askComputing/HASH/ETH_KEY/REQUEST_ID"]`,
+		Use:   `data-client ["/data/askComputing/ETH_KEY/COMPUTING_HASH/CONTRACT_HASH/PUBLIC_KEY"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp3.Run(c, args) },
 	}
@@ -136,7 +142,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 	}
 	tmp4 := new(DelDataClientCommand)
 	sub = &cobra.Command{
-		Use:   `data-client ["/data/del/HASH/PRIVATE_KEY"]`,
+		Use:   `data-client ["/data/del/HASH/ETH_KEY"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp4.Run(c, args) },
 	}
@@ -146,11 +152,11 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 	app.AddCommand(command)
 	command = &cobra.Command{
 		Use:   "upload-data",
-		Short: `upload encrypted data[hash] for [request_id]`,
+		Short: `upload encrypted data[hash] for data request`,
 	}
 	tmp5 := new(UploadDataDataClientCommand)
 	sub = &cobra.Command{
-		Use:   `data-client ["/data/upload/HASH/ETH_KEY/REQUEST_ID"]`,
+		Use:   `data-client ["/data/upload/ENCRYPT_DATA_HASH/ETH_KEY/DATA_HASH/CONTRACT_HASH"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp5.Run(c, args) },
 	}
@@ -377,7 +383,7 @@ func (cmd *AddDataClientCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = fmt.Sprintf("/data/add/%v/%v", url.QueryEscape(cmd.Hash), url.QueryEscape(cmd.PrivateKey))
+		path = fmt.Sprintf("/data/add/%v/%v", url.QueryEscape(cmd.Hash), url.QueryEscape(cmd.ETHKey))
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -393,10 +399,10 @@ func (cmd *AddDataClientCommand) Run(c *client.Client, args []string) error {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *AddDataClientCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var eTHKey string
+	cc.Flags().StringVar(&cmd.ETHKey, "ETH_key", eTHKey, `ETH private key for transaction`)
 	var hash string
 	cc.Flags().StringVar(&cmd.Hash, "hash", hash, `data IPFS address`)
-	var privateKey string
-	cc.Flags().StringVar(&cmd.PrivateKey, "private_key", privateKey, `ETH private key for transaction`)
 }
 
 // Run makes the HTTP request corresponding to the AgreeDataClientCommand command.
@@ -405,7 +411,7 @@ func (cmd *AgreeDataClientCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = fmt.Sprintf("/data/agree/%v/%v", url.QueryEscape(cmd.ETHKey), cmd.RequestID)
+		path = fmt.Sprintf("/data/agree/%v/%v/%v", url.QueryEscape(cmd.ETHKey), url.QueryEscape(cmd.DataHash), url.QueryEscape(cmd.ContractHash))
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -423,8 +429,10 @@ func (cmd *AgreeDataClientCommand) Run(c *client.Client, args []string) error {
 func (cmd *AgreeDataClientCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	var eTHKey string
 	cc.Flags().StringVar(&cmd.ETHKey, "ETH_key", eTHKey, `ETH private key for transaction`)
-	var requestID int
-	cc.Flags().IntVar(&cmd.RequestID, "request_id", requestID, `request[ID]`)
+	var contractHash string
+	cc.Flags().StringVar(&cmd.ContractHash, "contract_hash", contractHash, `smart contract hash`)
+	var dataHash string
+	cc.Flags().StringVar(&cmd.DataHash, "data_hash", dataHash, `data hash`)
 }
 
 // Run makes the HTTP request corresponding to the AskComputingDataClientCommand command.
@@ -433,7 +441,7 @@ func (cmd *AskComputingDataClientCommand) Run(c *client.Client, args []string) e
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = fmt.Sprintf("/data/askComputing/%v/%v/%v", url.QueryEscape(cmd.Hash), url.QueryEscape(cmd.ETHKey), cmd.RequestID)
+		path = fmt.Sprintf("/data/askComputing/%v/%v/%v/%v", url.QueryEscape(cmd.ETHKey), url.QueryEscape(cmd.ComputingHash), url.QueryEscape(cmd.ContractHash), url.QueryEscape(cmd.PublicKey))
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -451,10 +459,12 @@ func (cmd *AskComputingDataClientCommand) Run(c *client.Client, args []string) e
 func (cmd *AskComputingDataClientCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	var eTHKey string
 	cc.Flags().StringVar(&cmd.ETHKey, "ETH_key", eTHKey, `ETH private key for transaction`)
-	var hash string
-	cc.Flags().StringVar(&cmd.Hash, "hash", hash, `computing resourse hash`)
-	var requestID int
-	cc.Flags().IntVar(&cmd.RequestID, "request_id", requestID, `request[ID]`)
+	var computingHash string
+	cc.Flags().StringVar(&cmd.ComputingHash, "computing_hash", computingHash, `computing resourse hash`)
+	var contractHash string
+	cc.Flags().StringVar(&cmd.ContractHash, "contract_hash", contractHash, `smart contract hash`)
+	var publicKey string
+	cc.Flags().StringVar(&cmd.PublicKey, "public_key", publicKey, `ETH public key(Wallet address)`)
 }
 
 // Run makes the HTTP request corresponding to the DelDataClientCommand command.
@@ -463,7 +473,7 @@ func (cmd *DelDataClientCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = fmt.Sprintf("/data/del/%v/%v", url.QueryEscape(cmd.Hash), url.QueryEscape(cmd.PrivateKey))
+		path = fmt.Sprintf("/data/del/%v/%v", url.QueryEscape(cmd.Hash), url.QueryEscape(cmd.ETHKey))
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -479,10 +489,10 @@ func (cmd *DelDataClientCommand) Run(c *client.Client, args []string) error {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *DelDataClientCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var eTHKey string
+	cc.Flags().StringVar(&cmd.ETHKey, "ETH_key", eTHKey, `ETH private key for transaction`)
 	var hash string
 	cc.Flags().StringVar(&cmd.Hash, "hash", hash, `data IPFS address`)
-	var privateKey string
-	cc.Flags().StringVar(&cmd.PrivateKey, "private_key", privateKey, `ETH private key for transaction`)
 }
 
 // Run makes the HTTP request corresponding to the UploadDataDataClientCommand command.
@@ -491,7 +501,7 @@ func (cmd *UploadDataDataClientCommand) Run(c *client.Client, args []string) err
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = fmt.Sprintf("/data/upload/%v/%v/%v", url.QueryEscape(cmd.Hash), url.QueryEscape(cmd.ETHKey), cmd.RequestID)
+		path = fmt.Sprintf("/data/upload/%v/%v/%v/%v", url.QueryEscape(cmd.EncryptDataHash), url.QueryEscape(cmd.ETHKey), url.QueryEscape(cmd.DataHash), url.QueryEscape(cmd.ContractHash))
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -509,8 +519,10 @@ func (cmd *UploadDataDataClientCommand) Run(c *client.Client, args []string) err
 func (cmd *UploadDataDataClientCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	var eTHKey string
 	cc.Flags().StringVar(&cmd.ETHKey, "ETH_key", eTHKey, `ETH private key for transaction`)
-	var hash string
-	cc.Flags().StringVar(&cmd.Hash, "hash", hash, `encrypted data hash`)
-	var requestID int
-	cc.Flags().IntVar(&cmd.RequestID, "request_id", requestID, `request[ID]`)
+	var contractHash string
+	cc.Flags().StringVar(&cmd.ContractHash, "contract_hash", contractHash, `smart contract hash`)
+	var dataHash string
+	cc.Flags().StringVar(&cmd.DataHash, "data_hash", dataHash, `data hash`)
+	var encryptDataHash string
+	cc.Flags().StringVar(&cmd.EncryptDataHash, "encrypt_data_hash", encryptDataHash, `encrypted data hash`)
 }

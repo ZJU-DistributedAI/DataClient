@@ -47,19 +47,19 @@ info:
   title: Data client to add or delete data
   version: ""
 paths:
-  /data/add/{hash}/{private_key}:
+  /data/add/{hash}/{ETH_key}:
     post:
       description: add data hash
       operationId: DataClient#add
       parameters:
+      - description: ETH private key for transaction
+        in: path
+        name: ETH_key
+        required: true
+        type: string
       - description: data IPFS address
         in: path
         name: hash
-        required: true
-        type: string
-      - description: ETH private key for transaction
-        in: path
-        name: private_key
         required: true
         type: string
       produces:
@@ -81,9 +81,9 @@ paths:
       summary: add DataClient
       tags:
       - DataClient
-  /data/agree/{ETH_key}/{request_id}:
+  /data/agree/{ETH_key}/{data_hash}/{contract_hash}:
     post:
-      description: agree data request for request [ID]
+      description: agree data request
       operationId: DataClient#agree
       parameters:
       - description: ETH private key for transaction
@@ -91,11 +91,16 @@ paths:
         name: ETH_key
         required: true
         type: string
-      - description: request[ID]
+      - description: smart contract hash
         in: path
-        name: request_id
+        name: contract_hash
         required: true
-        type: integer
+        type: string
+      - description: data hash
+        in: path
+        name: data_hash
+        required: true
+        type: string
       produces:
       - application/vnd.goa.error
       - plain/text
@@ -110,14 +115,18 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/error'
+        "501":
+          description: Not Implemented
+          schema:
+            $ref: '#/definitions/error'
       schemes:
       - http
       summary: agree DataClient
       tags:
       - DataClient
-  /data/askComputing/{hash}/{ETH_key}/{request_id}:
+  /data/askComputing/{ETH_key}/{computing_hash}/{contract_hash}/{public_key}:
     post:
-      description: ask for computing for [request_id] on computing resourse[hash]
+      description: ask for computing for data request
       operationId: DataClient#askComputing
       parameters:
       - description: ETH private key for transaction
@@ -127,14 +136,19 @@ paths:
         type: string
       - description: computing resourse hash
         in: path
-        name: hash
+        name: computing_hash
         required: true
         type: string
-      - description: request[ID]
+      - description: smart contract hash
         in: path
-        name: request_id
+        name: contract_hash
         required: true
-        type: integer
+        type: string
+      - description: ETH public key(Wallet address)
+        in: path
+        name: public_key
+        required: true
+        type: string
       produces:
       - application/vnd.goa.error
       - plain/text
@@ -149,24 +163,28 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/error'
+        "501":
+          description: Not Implemented
+          schema:
+            $ref: '#/definitions/error'
       schemes:
       - http
       summary: askComputing DataClient
       tags:
       - DataClient
-  /data/del/{hash}/{private_key}:
+  /data/del/{hash}/{ETH_key}:
     post:
       description: delete data hash
       operationId: DataClient#del
       parameters:
+      - description: ETH private key for transaction
+        in: path
+        name: ETH_key
+        required: true
+        type: string
       - description: data IPFS address
         in: path
         name: hash
-        required: true
-        type: string
-      - description: ETH private key for transaction
-        in: path
-        name: private_key
         required: true
         type: string
       produces:
@@ -188,9 +206,9 @@ paths:
       summary: del DataClient
       tags:
       - DataClient
-  /data/upload/{hash}/{ETH_key}/{request_id}:
+  /data/upload/{encrypt_data_hash}/{ETH_key}/{data_hash}/{contract_hash}:
     post:
-      description: upload encrypted data[hash] for [request_id]
+      description: upload encrypted data[hash] for data request
       operationId: DataClient#uploadData
       parameters:
       - description: ETH private key for transaction
@@ -198,16 +216,21 @@ paths:
         name: ETH_key
         required: true
         type: string
-      - description: encrypted data hash
+      - description: smart contract hash
         in: path
-        name: hash
+        name: contract_hash
         required: true
         type: string
-      - description: request[ID]
+      - description: data hash
         in: path
-        name: request_id
+        name: data_hash
         required: true
-        type: integer
+        type: string
+      - description: encrypted data hash
+        in: path
+        name: encrypt_data_hash
+        required: true
+        type: string
       produces:
       - application/vnd.goa.error
       - plain/text
@@ -220,6 +243,10 @@ paths:
             $ref: '#/definitions/error'
         "500":
           description: Internal Server Error
+          schema:
+            $ref: '#/definitions/error'
+        "501":
+          description: Not Implemented
           schema:
             $ref: '#/definitions/error'
       schemes:

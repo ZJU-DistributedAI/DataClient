@@ -14,7 +14,6 @@ import (
 	"context"
 	"github.com/goadesign/goa"
 	"net/http"
-	"strconv"
 )
 
 // AddDataClientContext provides the DataClient add action context.
@@ -22,8 +21,8 @@ type AddDataClientContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
-	Hash       string
-	PrivateKey string
+	ETHKey string
+	Hash   string
 }
 
 // NewAddDataClientContext parses the incoming request URL and body, performs validations and creates the
@@ -35,15 +34,15 @@ func NewAddDataClientContext(ctx context.Context, r *http.Request, service *goa.
 	req := goa.ContextRequest(ctx)
 	req.Request = r
 	rctx := AddDataClientContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramETHKey := req.Params["ETH_key"]
+	if len(paramETHKey) > 0 {
+		rawETHKey := paramETHKey[0]
+		rctx.ETHKey = rawETHKey
+	}
 	paramHash := req.Params["hash"]
 	if len(paramHash) > 0 {
 		rawHash := paramHash[0]
 		rctx.Hash = rawHash
-	}
-	paramPrivateKey := req.Params["private_key"]
-	if len(paramPrivateKey) > 0 {
-		rawPrivateKey := paramPrivateKey[0]
-		rctx.PrivateKey = rawPrivateKey
 	}
 	return &rctx, err
 }
@@ -79,8 +78,9 @@ type AgreeDataClientContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
-	ETHKey    string
-	RequestID int
+	ETHKey       string
+	ContractHash string
+	DataHash     string
 }
 
 // NewAgreeDataClientContext parses the incoming request URL and body, performs validations and creates the
@@ -97,14 +97,15 @@ func NewAgreeDataClientContext(ctx context.Context, r *http.Request, service *go
 		rawETHKey := paramETHKey[0]
 		rctx.ETHKey = rawETHKey
 	}
-	paramRequestID := req.Params["request_id"]
-	if len(paramRequestID) > 0 {
-		rawRequestID := paramRequestID[0]
-		if requestID, err2 := strconv.Atoi(rawRequestID); err2 == nil {
-			rctx.RequestID = requestID
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("request_id", rawRequestID, "integer"))
-		}
+	paramContractHash := req.Params["contract_hash"]
+	if len(paramContractHash) > 0 {
+		rawContractHash := paramContractHash[0]
+		rctx.ContractHash = rawContractHash
+	}
+	paramDataHash := req.Params["data_hash"]
+	if len(paramDataHash) > 0 {
+		rawDataHash := paramDataHash[0]
+		rctx.DataHash = rawDataHash
 	}
 	return &rctx, err
 }
@@ -135,14 +136,23 @@ func (ctx *AgreeDataClientContext) InternalServerError(r error) error {
 	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
 }
 
+// NotImplemented sends a HTTP response with status code 501.
+func (ctx *AgreeDataClientContext) NotImplemented(r error) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 501, r)
+}
+
 // AskComputingDataClientContext provides the DataClient askComputing action context.
 type AskComputingDataClientContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
-	ETHKey    string
-	Hash      string
-	RequestID int
+	ETHKey        string
+	ComputingHash string
+	ContractHash  string
+	PublicKey     string
 }
 
 // NewAskComputingDataClientContext parses the incoming request URL and body, performs validations and creates the
@@ -159,19 +169,20 @@ func NewAskComputingDataClientContext(ctx context.Context, r *http.Request, serv
 		rawETHKey := paramETHKey[0]
 		rctx.ETHKey = rawETHKey
 	}
-	paramHash := req.Params["hash"]
-	if len(paramHash) > 0 {
-		rawHash := paramHash[0]
-		rctx.Hash = rawHash
+	paramComputingHash := req.Params["computing_hash"]
+	if len(paramComputingHash) > 0 {
+		rawComputingHash := paramComputingHash[0]
+		rctx.ComputingHash = rawComputingHash
 	}
-	paramRequestID := req.Params["request_id"]
-	if len(paramRequestID) > 0 {
-		rawRequestID := paramRequestID[0]
-		if requestID, err2 := strconv.Atoi(rawRequestID); err2 == nil {
-			rctx.RequestID = requestID
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("request_id", rawRequestID, "integer"))
-		}
+	paramContractHash := req.Params["contract_hash"]
+	if len(paramContractHash) > 0 {
+		rawContractHash := paramContractHash[0]
+		rctx.ContractHash = rawContractHash
+	}
+	paramPublicKey := req.Params["public_key"]
+	if len(paramPublicKey) > 0 {
+		rawPublicKey := paramPublicKey[0]
+		rctx.PublicKey = rawPublicKey
 	}
 	return &rctx, err
 }
@@ -202,13 +213,21 @@ func (ctx *AskComputingDataClientContext) InternalServerError(r error) error {
 	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
 }
 
+// NotImplemented sends a HTTP response with status code 501.
+func (ctx *AskComputingDataClientContext) NotImplemented(r error) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 501, r)
+}
+
 // DelDataClientContext provides the DataClient del action context.
 type DelDataClientContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
-	Hash       string
-	PrivateKey string
+	ETHKey string
+	Hash   string
 }
 
 // NewDelDataClientContext parses the incoming request URL and body, performs validations and creates the
@@ -220,15 +239,15 @@ func NewDelDataClientContext(ctx context.Context, r *http.Request, service *goa.
 	req := goa.ContextRequest(ctx)
 	req.Request = r
 	rctx := DelDataClientContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramETHKey := req.Params["ETH_key"]
+	if len(paramETHKey) > 0 {
+		rawETHKey := paramETHKey[0]
+		rctx.ETHKey = rawETHKey
+	}
 	paramHash := req.Params["hash"]
 	if len(paramHash) > 0 {
 		rawHash := paramHash[0]
 		rctx.Hash = rawHash
-	}
-	paramPrivateKey := req.Params["private_key"]
-	if len(paramPrivateKey) > 0 {
-		rawPrivateKey := paramPrivateKey[0]
-		rctx.PrivateKey = rawPrivateKey
 	}
 	return &rctx, err
 }
@@ -264,9 +283,10 @@ type UploadDataDataClientContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
-	ETHKey    string
-	Hash      string
-	RequestID int
+	ETHKey          string
+	ContractHash    string
+	DataHash        string
+	EncryptDataHash string
 }
 
 // NewUploadDataDataClientContext parses the incoming request URL and body, performs validations and creates the
@@ -283,19 +303,20 @@ func NewUploadDataDataClientContext(ctx context.Context, r *http.Request, servic
 		rawETHKey := paramETHKey[0]
 		rctx.ETHKey = rawETHKey
 	}
-	paramHash := req.Params["hash"]
-	if len(paramHash) > 0 {
-		rawHash := paramHash[0]
-		rctx.Hash = rawHash
+	paramContractHash := req.Params["contract_hash"]
+	if len(paramContractHash) > 0 {
+		rawContractHash := paramContractHash[0]
+		rctx.ContractHash = rawContractHash
 	}
-	paramRequestID := req.Params["request_id"]
-	if len(paramRequestID) > 0 {
-		rawRequestID := paramRequestID[0]
-		if requestID, err2 := strconv.Atoi(rawRequestID); err2 == nil {
-			rctx.RequestID = requestID
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("request_id", rawRequestID, "integer"))
-		}
+	paramDataHash := req.Params["data_hash"]
+	if len(paramDataHash) > 0 {
+		rawDataHash := paramDataHash[0]
+		rctx.DataHash = rawDataHash
+	}
+	paramEncryptDataHash := req.Params["encrypt_data_hash"]
+	if len(paramEncryptDataHash) > 0 {
+		rawEncryptDataHash := paramEncryptDataHash[0]
+		rctx.EncryptDataHash = rawEncryptDataHash
 	}
 	return &rctx, err
 }
@@ -324,4 +345,12 @@ func (ctx *UploadDataDataClientContext) InternalServerError(r error) error {
 		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
+}
+
+// NotImplemented sends a HTTP response with status code 501.
+func (ctx *UploadDataDataClientContext) NotImplemented(r error) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 501, r)
 }

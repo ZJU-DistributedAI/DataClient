@@ -15,13 +15,12 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"strconv"
 )
 
 // AddDataClientPath computes a request path to the add action of DataClient.
-func AddDataClientPath(hash string, privateKey string) string {
+func AddDataClientPath(hash string, eTHKey string) string {
 	param0 := hash
-	param1 := privateKey
+	param1 := eTHKey
 
 	return fmt.Sprintf("/data/add/%s/%s", param0, param1)
 }
@@ -50,14 +49,15 @@ func (c *Client) NewAddDataClientRequest(ctx context.Context, path string) (*htt
 }
 
 // AgreeDataClientPath computes a request path to the agree action of DataClient.
-func AgreeDataClientPath(eTHKey string, requestID int) string {
+func AgreeDataClientPath(eTHKey string, dataHash string, contractHash string) string {
 	param0 := eTHKey
-	param1 := strconv.Itoa(requestID)
+	param1 := dataHash
+	param2 := contractHash
 
-	return fmt.Sprintf("/data/agree/%s/%s", param0, param1)
+	return fmt.Sprintf("/data/agree/%s/%s/%s", param0, param1, param2)
 }
 
-// agree data request for request [ID]
+// agree data request
 func (c *Client) AgreeDataClient(ctx context.Context, path string) (*http.Response, error) {
 	req, err := c.NewAgreeDataClientRequest(ctx, path)
 	if err != nil {
@@ -81,15 +81,16 @@ func (c *Client) NewAgreeDataClientRequest(ctx context.Context, path string) (*h
 }
 
 // AskComputingDataClientPath computes a request path to the askComputing action of DataClient.
-func AskComputingDataClientPath(hash string, eTHKey string, requestID int) string {
-	param0 := hash
-	param1 := eTHKey
-	param2 := strconv.Itoa(requestID)
+func AskComputingDataClientPath(eTHKey string, computingHash string, contractHash string, publicKey string) string {
+	param0 := eTHKey
+	param1 := computingHash
+	param2 := contractHash
+	param3 := publicKey
 
-	return fmt.Sprintf("/data/askComputing/%s/%s/%s", param0, param1, param2)
+	return fmt.Sprintf("/data/askComputing/%s/%s/%s/%s", param0, param1, param2, param3)
 }
 
-// ask for computing for [request_id] on computing resourse[hash]
+// ask for computing for data request
 func (c *Client) AskComputingDataClient(ctx context.Context, path string) (*http.Response, error) {
 	req, err := c.NewAskComputingDataClientRequest(ctx, path)
 	if err != nil {
@@ -113,9 +114,9 @@ func (c *Client) NewAskComputingDataClientRequest(ctx context.Context, path stri
 }
 
 // DelDataClientPath computes a request path to the del action of DataClient.
-func DelDataClientPath(hash string, privateKey string) string {
+func DelDataClientPath(hash string, eTHKey string) string {
 	param0 := hash
-	param1 := privateKey
+	param1 := eTHKey
 
 	return fmt.Sprintf("/data/del/%s/%s", param0, param1)
 }
@@ -144,15 +145,16 @@ func (c *Client) NewDelDataClientRequest(ctx context.Context, path string) (*htt
 }
 
 // UploadDataDataClientPath computes a request path to the uploadData action of DataClient.
-func UploadDataDataClientPath(hash string, eTHKey string, requestID int) string {
-	param0 := hash
+func UploadDataDataClientPath(encryptDataHash string, eTHKey string, dataHash string, contractHash string) string {
+	param0 := encryptDataHash
 	param1 := eTHKey
-	param2 := strconv.Itoa(requestID)
+	param2 := dataHash
+	param3 := contractHash
 
-	return fmt.Sprintf("/data/upload/%s/%s/%s", param0, param1, param2)
+	return fmt.Sprintf("/data/upload/%s/%s/%s/%s", param0, param1, param2, param3)
 }
 
-// upload encrypted data[hash] for [request_id]
+// upload encrypted data[hash] for data request
 func (c *Client) UploadDataDataClient(ctx context.Context, path string) (*http.Response, error) {
 	req, err := c.NewUploadDataDataClientRequest(ctx, path)
 	if err != nil {

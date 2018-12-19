@@ -28,7 +28,7 @@ import (
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func AddDataClientBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string, privateKey string) (http.ResponseWriter, error) {
+func AddDataClientBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string, eTHKey string) (http.ResponseWriter, error) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -49,7 +49,7 @@ func AddDataClientBadRequest(t goatest.TInterface, ctx context.Context, service 
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/data/add/%v/%v", hash, privateKey),
+		Path: fmt.Sprintf("/data/add/%v/%v", hash, eTHKey),
 	}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
@@ -57,7 +57,7 @@ func AddDataClientBadRequest(t goatest.TInterface, ctx context.Context, service 
 	}
 	prms := url.Values{}
 	prms["hash"] = []string{fmt.Sprintf("%v", hash)}
-	prms["private_key"] = []string{fmt.Sprintf("%v", privateKey)}
+	prms["ETH_key"] = []string{fmt.Sprintf("%v", eTHKey)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -98,7 +98,7 @@ func AddDataClientBadRequest(t goatest.TInterface, ctx context.Context, service 
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func AddDataClientInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string, privateKey string) (http.ResponseWriter, error) {
+func AddDataClientInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string, eTHKey string) (http.ResponseWriter, error) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -119,7 +119,7 @@ func AddDataClientInternalServerError(t goatest.TInterface, ctx context.Context,
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/data/add/%v/%v", hash, privateKey),
+		Path: fmt.Sprintf("/data/add/%v/%v", hash, eTHKey),
 	}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
@@ -127,7 +127,7 @@ func AddDataClientInternalServerError(t goatest.TInterface, ctx context.Context,
 	}
 	prms := url.Values{}
 	prms["hash"] = []string{fmt.Sprintf("%v", hash)}
-	prms["private_key"] = []string{fmt.Sprintf("%v", privateKey)}
+	prms["ETH_key"] = []string{fmt.Sprintf("%v", eTHKey)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -168,7 +168,7 @@ func AddDataClientInternalServerError(t goatest.TInterface, ctx context.Context,
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func AddDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string, privateKey string) http.ResponseWriter {
+func AddDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string, eTHKey string) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -188,7 +188,7 @@ func AddDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.Ser
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/data/add/%v/%v", hash, privateKey),
+		Path: fmt.Sprintf("/data/add/%v/%v", hash, eTHKey),
 	}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
@@ -196,7 +196,7 @@ func AddDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.Ser
 	}
 	prms := url.Values{}
 	prms["hash"] = []string{fmt.Sprintf("%v", hash)}
-	prms["private_key"] = []string{fmt.Sprintf("%v", privateKey)}
+	prms["ETH_key"] = []string{fmt.Sprintf("%v", eTHKey)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -230,7 +230,7 @@ func AddDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.Ser
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func AgreeDataClientBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, eTHKey string, requestID int) (http.ResponseWriter, error) {
+func AgreeDataClientBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, eTHKey string, dataHash string, contractHash string) (http.ResponseWriter, error) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -251,7 +251,7 @@ func AgreeDataClientBadRequest(t goatest.TInterface, ctx context.Context, servic
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/data/agree/%v/%v", eTHKey, requestID),
+		Path: fmt.Sprintf("/data/agree/%v/%v/%v", eTHKey, dataHash, contractHash),
 	}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
@@ -259,7 +259,8 @@ func AgreeDataClientBadRequest(t goatest.TInterface, ctx context.Context, servic
 	}
 	prms := url.Values{}
 	prms["ETH_key"] = []string{fmt.Sprintf("%v", eTHKey)}
-	prms["request_id"] = []string{fmt.Sprintf("%v", requestID)}
+	prms["data_hash"] = []string{fmt.Sprintf("%v", dataHash)}
+	prms["contract_hash"] = []string{fmt.Sprintf("%v", contractHash)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -300,7 +301,7 @@ func AgreeDataClientBadRequest(t goatest.TInterface, ctx context.Context, servic
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func AgreeDataClientInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, eTHKey string, requestID int) (http.ResponseWriter, error) {
+func AgreeDataClientInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, eTHKey string, dataHash string, contractHash string) (http.ResponseWriter, error) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -321,7 +322,7 @@ func AgreeDataClientInternalServerError(t goatest.TInterface, ctx context.Contex
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/data/agree/%v/%v", eTHKey, requestID),
+		Path: fmt.Sprintf("/data/agree/%v/%v/%v", eTHKey, dataHash, contractHash),
 	}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
@@ -329,7 +330,8 @@ func AgreeDataClientInternalServerError(t goatest.TInterface, ctx context.Contex
 	}
 	prms := url.Values{}
 	prms["ETH_key"] = []string{fmt.Sprintf("%v", eTHKey)}
-	prms["request_id"] = []string{fmt.Sprintf("%v", requestID)}
+	prms["data_hash"] = []string{fmt.Sprintf("%v", dataHash)}
+	prms["contract_hash"] = []string{fmt.Sprintf("%v", contractHash)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -366,11 +368,82 @@ func AgreeDataClientInternalServerError(t goatest.TInterface, ctx context.Contex
 	return rw, mt
 }
 
+// AgreeDataClientNotImplemented runs the method Agree of the given controller with the given parameters.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
+// If ctx is nil then context.Background() is used.
+// If service is nil then a default service is created.
+func AgreeDataClientNotImplemented(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, eTHKey string, dataHash string, contractHash string) (http.ResponseWriter, error) {
+	// Setup service
+	var (
+		logBuf bytes.Buffer
+		resp   interface{}
+
+		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
+	)
+	if service == nil {
+		service = goatest.Service(&logBuf, respSetter)
+	} else {
+		logger := log.New(&logBuf, "", log.Ltime)
+		service.WithLogger(goa.NewLogger(logger))
+		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
+		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
+		service.Encoder.Register(newEncoder, "*/*")
+	}
+
+	// Setup request context
+	rw := httptest.NewRecorder()
+	u := &url.URL{
+		Path: fmt.Sprintf("/data/agree/%v/%v/%v", eTHKey, dataHash, contractHash),
+	}
+	req, err := http.NewRequest("POST", u.String(), nil)
+	if err != nil {
+		panic("invalid test " + err.Error()) // bug
+	}
+	prms := url.Values{}
+	prms["ETH_key"] = []string{fmt.Sprintf("%v", eTHKey)}
+	prms["data_hash"] = []string{fmt.Sprintf("%v", dataHash)}
+	prms["contract_hash"] = []string{fmt.Sprintf("%v", contractHash)}
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	goaCtx := goa.NewContext(goa.WithAction(ctx, "DataClientTest"), rw, req, prms)
+	agreeCtx, _err := app.NewAgreeDataClientContext(goaCtx, req, service)
+	if _err != nil {
+		e, ok := _err.(goa.ServiceError)
+		if !ok {
+			panic("invalid test data " + _err.Error()) // bug
+		}
+		return nil, e
+	}
+
+	// Perform action
+	_err = ctrl.Agree(agreeCtx)
+
+	// Validate response
+	if _err != nil {
+		t.Fatalf("controller returned %+v, logs:\n%s", _err, logBuf.String())
+	}
+	if rw.Code != 501 {
+		t.Errorf("invalid response status code: got %+v, expected 501", rw.Code)
+	}
+	var mt error
+	if resp != nil {
+		var _ok bool
+		mt, _ok = resp.(error)
+		if !_ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of error", resp, resp)
+		}
+	}
+
+	// Return results
+	return rw, mt
+}
+
 // AgreeDataClientOK runs the method Agree of the given controller with the given parameters.
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func AgreeDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, eTHKey string, requestID int) http.ResponseWriter {
+func AgreeDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, eTHKey string, dataHash string, contractHash string) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -390,7 +463,7 @@ func AgreeDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.S
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/data/agree/%v/%v", eTHKey, requestID),
+		Path: fmt.Sprintf("/data/agree/%v/%v/%v", eTHKey, dataHash, contractHash),
 	}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
@@ -398,7 +471,8 @@ func AgreeDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.S
 	}
 	prms := url.Values{}
 	prms["ETH_key"] = []string{fmt.Sprintf("%v", eTHKey)}
-	prms["request_id"] = []string{fmt.Sprintf("%v", requestID)}
+	prms["data_hash"] = []string{fmt.Sprintf("%v", dataHash)}
+	prms["contract_hash"] = []string{fmt.Sprintf("%v", contractHash)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -432,7 +506,7 @@ func AgreeDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.S
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func AskComputingDataClientBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string, eTHKey string, requestID int) (http.ResponseWriter, error) {
+func AskComputingDataClientBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, eTHKey string, computingHash string, contractHash string, publicKey string) (http.ResponseWriter, error) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -453,16 +527,17 @@ func AskComputingDataClientBadRequest(t goatest.TInterface, ctx context.Context,
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/data/askComputing/%v/%v/%v", hash, eTHKey, requestID),
+		Path: fmt.Sprintf("/data/askComputing/%v/%v/%v/%v", eTHKey, computingHash, contractHash, publicKey),
 	}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
 		panic("invalid test " + err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["hash"] = []string{fmt.Sprintf("%v", hash)}
 	prms["ETH_key"] = []string{fmt.Sprintf("%v", eTHKey)}
-	prms["request_id"] = []string{fmt.Sprintf("%v", requestID)}
+	prms["computing_hash"] = []string{fmt.Sprintf("%v", computingHash)}
+	prms["contract_hash"] = []string{fmt.Sprintf("%v", contractHash)}
+	prms["public_key"] = []string{fmt.Sprintf("%v", publicKey)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -503,7 +578,7 @@ func AskComputingDataClientBadRequest(t goatest.TInterface, ctx context.Context,
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func AskComputingDataClientInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string, eTHKey string, requestID int) (http.ResponseWriter, error) {
+func AskComputingDataClientInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, eTHKey string, computingHash string, contractHash string, publicKey string) (http.ResponseWriter, error) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -524,16 +599,17 @@ func AskComputingDataClientInternalServerError(t goatest.TInterface, ctx context
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/data/askComputing/%v/%v/%v", hash, eTHKey, requestID),
+		Path: fmt.Sprintf("/data/askComputing/%v/%v/%v/%v", eTHKey, computingHash, contractHash, publicKey),
 	}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
 		panic("invalid test " + err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["hash"] = []string{fmt.Sprintf("%v", hash)}
 	prms["ETH_key"] = []string{fmt.Sprintf("%v", eTHKey)}
-	prms["request_id"] = []string{fmt.Sprintf("%v", requestID)}
+	prms["computing_hash"] = []string{fmt.Sprintf("%v", computingHash)}
+	prms["contract_hash"] = []string{fmt.Sprintf("%v", contractHash)}
+	prms["public_key"] = []string{fmt.Sprintf("%v", publicKey)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -570,11 +646,83 @@ func AskComputingDataClientInternalServerError(t goatest.TInterface, ctx context
 	return rw, mt
 }
 
+// AskComputingDataClientNotImplemented runs the method AskComputing of the given controller with the given parameters.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
+// If ctx is nil then context.Background() is used.
+// If service is nil then a default service is created.
+func AskComputingDataClientNotImplemented(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, eTHKey string, computingHash string, contractHash string, publicKey string) (http.ResponseWriter, error) {
+	// Setup service
+	var (
+		logBuf bytes.Buffer
+		resp   interface{}
+
+		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
+	)
+	if service == nil {
+		service = goatest.Service(&logBuf, respSetter)
+	} else {
+		logger := log.New(&logBuf, "", log.Ltime)
+		service.WithLogger(goa.NewLogger(logger))
+		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
+		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
+		service.Encoder.Register(newEncoder, "*/*")
+	}
+
+	// Setup request context
+	rw := httptest.NewRecorder()
+	u := &url.URL{
+		Path: fmt.Sprintf("/data/askComputing/%v/%v/%v/%v", eTHKey, computingHash, contractHash, publicKey),
+	}
+	req, err := http.NewRequest("POST", u.String(), nil)
+	if err != nil {
+		panic("invalid test " + err.Error()) // bug
+	}
+	prms := url.Values{}
+	prms["ETH_key"] = []string{fmt.Sprintf("%v", eTHKey)}
+	prms["computing_hash"] = []string{fmt.Sprintf("%v", computingHash)}
+	prms["contract_hash"] = []string{fmt.Sprintf("%v", contractHash)}
+	prms["public_key"] = []string{fmt.Sprintf("%v", publicKey)}
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	goaCtx := goa.NewContext(goa.WithAction(ctx, "DataClientTest"), rw, req, prms)
+	askComputingCtx, _err := app.NewAskComputingDataClientContext(goaCtx, req, service)
+	if _err != nil {
+		e, ok := _err.(goa.ServiceError)
+		if !ok {
+			panic("invalid test data " + _err.Error()) // bug
+		}
+		return nil, e
+	}
+
+	// Perform action
+	_err = ctrl.AskComputing(askComputingCtx)
+
+	// Validate response
+	if _err != nil {
+		t.Fatalf("controller returned %+v, logs:\n%s", _err, logBuf.String())
+	}
+	if rw.Code != 501 {
+		t.Errorf("invalid response status code: got %+v, expected 501", rw.Code)
+	}
+	var mt error
+	if resp != nil {
+		var _ok bool
+		mt, _ok = resp.(error)
+		if !_ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of error", resp, resp)
+		}
+	}
+
+	// Return results
+	return rw, mt
+}
+
 // AskComputingDataClientOK runs the method AskComputing of the given controller with the given parameters.
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func AskComputingDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string, eTHKey string, requestID int) http.ResponseWriter {
+func AskComputingDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, eTHKey string, computingHash string, contractHash string, publicKey string) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -594,16 +742,17 @@ func AskComputingDataClientOK(t goatest.TInterface, ctx context.Context, service
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/data/askComputing/%v/%v/%v", hash, eTHKey, requestID),
+		Path: fmt.Sprintf("/data/askComputing/%v/%v/%v/%v", eTHKey, computingHash, contractHash, publicKey),
 	}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
 		panic("invalid test " + err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["hash"] = []string{fmt.Sprintf("%v", hash)}
 	prms["ETH_key"] = []string{fmt.Sprintf("%v", eTHKey)}
-	prms["request_id"] = []string{fmt.Sprintf("%v", requestID)}
+	prms["computing_hash"] = []string{fmt.Sprintf("%v", computingHash)}
+	prms["contract_hash"] = []string{fmt.Sprintf("%v", contractHash)}
+	prms["public_key"] = []string{fmt.Sprintf("%v", publicKey)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -637,7 +786,7 @@ func AskComputingDataClientOK(t goatest.TInterface, ctx context.Context, service
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func DelDataClientBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string, privateKey string) (http.ResponseWriter, error) {
+func DelDataClientBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string, eTHKey string) (http.ResponseWriter, error) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -658,7 +807,7 @@ func DelDataClientBadRequest(t goatest.TInterface, ctx context.Context, service 
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/data/del/%v/%v", hash, privateKey),
+		Path: fmt.Sprintf("/data/del/%v/%v", hash, eTHKey),
 	}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
@@ -666,7 +815,7 @@ func DelDataClientBadRequest(t goatest.TInterface, ctx context.Context, service 
 	}
 	prms := url.Values{}
 	prms["hash"] = []string{fmt.Sprintf("%v", hash)}
-	prms["private_key"] = []string{fmt.Sprintf("%v", privateKey)}
+	prms["ETH_key"] = []string{fmt.Sprintf("%v", eTHKey)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -707,7 +856,7 @@ func DelDataClientBadRequest(t goatest.TInterface, ctx context.Context, service 
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func DelDataClientInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string, privateKey string) (http.ResponseWriter, error) {
+func DelDataClientInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string, eTHKey string) (http.ResponseWriter, error) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -728,7 +877,7 @@ func DelDataClientInternalServerError(t goatest.TInterface, ctx context.Context,
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/data/del/%v/%v", hash, privateKey),
+		Path: fmt.Sprintf("/data/del/%v/%v", hash, eTHKey),
 	}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
@@ -736,7 +885,7 @@ func DelDataClientInternalServerError(t goatest.TInterface, ctx context.Context,
 	}
 	prms := url.Values{}
 	prms["hash"] = []string{fmt.Sprintf("%v", hash)}
-	prms["private_key"] = []string{fmt.Sprintf("%v", privateKey)}
+	prms["ETH_key"] = []string{fmt.Sprintf("%v", eTHKey)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -777,7 +926,7 @@ func DelDataClientInternalServerError(t goatest.TInterface, ctx context.Context,
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func DelDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string, privateKey string) http.ResponseWriter {
+func DelDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string, eTHKey string) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -797,7 +946,7 @@ func DelDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.Ser
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/data/del/%v/%v", hash, privateKey),
+		Path: fmt.Sprintf("/data/del/%v/%v", hash, eTHKey),
 	}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
@@ -805,7 +954,7 @@ func DelDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.Ser
 	}
 	prms := url.Values{}
 	prms["hash"] = []string{fmt.Sprintf("%v", hash)}
-	prms["private_key"] = []string{fmt.Sprintf("%v", privateKey)}
+	prms["ETH_key"] = []string{fmt.Sprintf("%v", eTHKey)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -839,7 +988,7 @@ func DelDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.Ser
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UploadDataDataClientBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string, eTHKey string, requestID int) (http.ResponseWriter, error) {
+func UploadDataDataClientBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, encryptDataHash string, eTHKey string, dataHash string, contractHash string) (http.ResponseWriter, error) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -860,16 +1009,17 @@ func UploadDataDataClientBadRequest(t goatest.TInterface, ctx context.Context, s
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/data/upload/%v/%v/%v", hash, eTHKey, requestID),
+		Path: fmt.Sprintf("/data/upload/%v/%v/%v/%v", encryptDataHash, eTHKey, dataHash, contractHash),
 	}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
 		panic("invalid test " + err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["hash"] = []string{fmt.Sprintf("%v", hash)}
+	prms["encrypt_data_hash"] = []string{fmt.Sprintf("%v", encryptDataHash)}
 	prms["ETH_key"] = []string{fmt.Sprintf("%v", eTHKey)}
-	prms["request_id"] = []string{fmt.Sprintf("%v", requestID)}
+	prms["data_hash"] = []string{fmt.Sprintf("%v", dataHash)}
+	prms["contract_hash"] = []string{fmt.Sprintf("%v", contractHash)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -910,7 +1060,7 @@ func UploadDataDataClientBadRequest(t goatest.TInterface, ctx context.Context, s
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UploadDataDataClientInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string, eTHKey string, requestID int) (http.ResponseWriter, error) {
+func UploadDataDataClientInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, encryptDataHash string, eTHKey string, dataHash string, contractHash string) (http.ResponseWriter, error) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -931,16 +1081,17 @@ func UploadDataDataClientInternalServerError(t goatest.TInterface, ctx context.C
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/data/upload/%v/%v/%v", hash, eTHKey, requestID),
+		Path: fmt.Sprintf("/data/upload/%v/%v/%v/%v", encryptDataHash, eTHKey, dataHash, contractHash),
 	}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
 		panic("invalid test " + err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["hash"] = []string{fmt.Sprintf("%v", hash)}
+	prms["encrypt_data_hash"] = []string{fmt.Sprintf("%v", encryptDataHash)}
 	prms["ETH_key"] = []string{fmt.Sprintf("%v", eTHKey)}
-	prms["request_id"] = []string{fmt.Sprintf("%v", requestID)}
+	prms["data_hash"] = []string{fmt.Sprintf("%v", dataHash)}
+	prms["contract_hash"] = []string{fmt.Sprintf("%v", contractHash)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -977,11 +1128,83 @@ func UploadDataDataClientInternalServerError(t goatest.TInterface, ctx context.C
 	return rw, mt
 }
 
+// UploadDataDataClientNotImplemented runs the method UploadData of the given controller with the given parameters.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
+// If ctx is nil then context.Background() is used.
+// If service is nil then a default service is created.
+func UploadDataDataClientNotImplemented(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, encryptDataHash string, eTHKey string, dataHash string, contractHash string) (http.ResponseWriter, error) {
+	// Setup service
+	var (
+		logBuf bytes.Buffer
+		resp   interface{}
+
+		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
+	)
+	if service == nil {
+		service = goatest.Service(&logBuf, respSetter)
+	} else {
+		logger := log.New(&logBuf, "", log.Ltime)
+		service.WithLogger(goa.NewLogger(logger))
+		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
+		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
+		service.Encoder.Register(newEncoder, "*/*")
+	}
+
+	// Setup request context
+	rw := httptest.NewRecorder()
+	u := &url.URL{
+		Path: fmt.Sprintf("/data/upload/%v/%v/%v/%v", encryptDataHash, eTHKey, dataHash, contractHash),
+	}
+	req, err := http.NewRequest("POST", u.String(), nil)
+	if err != nil {
+		panic("invalid test " + err.Error()) // bug
+	}
+	prms := url.Values{}
+	prms["encrypt_data_hash"] = []string{fmt.Sprintf("%v", encryptDataHash)}
+	prms["ETH_key"] = []string{fmt.Sprintf("%v", eTHKey)}
+	prms["data_hash"] = []string{fmt.Sprintf("%v", dataHash)}
+	prms["contract_hash"] = []string{fmt.Sprintf("%v", contractHash)}
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	goaCtx := goa.NewContext(goa.WithAction(ctx, "DataClientTest"), rw, req, prms)
+	uploadDataCtx, _err := app.NewUploadDataDataClientContext(goaCtx, req, service)
+	if _err != nil {
+		e, ok := _err.(goa.ServiceError)
+		if !ok {
+			panic("invalid test data " + _err.Error()) // bug
+		}
+		return nil, e
+	}
+
+	// Perform action
+	_err = ctrl.UploadData(uploadDataCtx)
+
+	// Validate response
+	if _err != nil {
+		t.Fatalf("controller returned %+v, logs:\n%s", _err, logBuf.String())
+	}
+	if rw.Code != 501 {
+		t.Errorf("invalid response status code: got %+v, expected 501", rw.Code)
+	}
+	var mt error
+	if resp != nil {
+		var _ok bool
+		mt, _ok = resp.(error)
+		if !_ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of error", resp, resp)
+		}
+	}
+
+	// Return results
+	return rw, mt
+}
+
 // UploadDataDataClientOK runs the method UploadData of the given controller with the given parameters.
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UploadDataDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, hash string, eTHKey string, requestID int) http.ResponseWriter {
+func UploadDataDataClientOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.DataClientController, encryptDataHash string, eTHKey string, dataHash string, contractHash string) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1001,16 +1224,17 @@ func UploadDataDataClientOK(t goatest.TInterface, ctx context.Context, service *
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/data/upload/%v/%v/%v", hash, eTHKey, requestID),
+		Path: fmt.Sprintf("/data/upload/%v/%v/%v/%v", encryptDataHash, eTHKey, dataHash, contractHash),
 	}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
 		panic("invalid test " + err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["hash"] = []string{fmt.Sprintf("%v", hash)}
+	prms["encrypt_data_hash"] = []string{fmt.Sprintf("%v", encryptDataHash)}
 	prms["ETH_key"] = []string{fmt.Sprintf("%v", eTHKey)}
-	prms["request_id"] = []string{fmt.Sprintf("%v", requestID)}
+	prms["data_hash"] = []string{fmt.Sprintf("%v", dataHash)}
+	prms["contract_hash"] = []string{fmt.Sprintf("%v", contractHash)}
 	if ctx == nil {
 		ctx = context.Background()
 	}

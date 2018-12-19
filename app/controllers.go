@@ -59,8 +59,8 @@ func MountDataClientController(service *goa.Service, ctrl DataClientController) 
 		}
 		return ctrl.Add(rctx)
 	}
-	service.Mux.Handle("POST", "/data/add/:hash/:private_key", ctrl.MuxHandler("add", h, nil))
-	service.LogInfo("mount", "ctrl", "DataClient", "action", "Add", "route", "POST /data/add/:hash/:private_key")
+	service.Mux.Handle("POST", "/data/add/:hash/:ETH_key", ctrl.MuxHandler("add", h, nil))
+	service.LogInfo("mount", "ctrl", "DataClient", "action", "Add", "route", "POST /data/add/:hash/:ETH_key")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -74,8 +74,8 @@ func MountDataClientController(service *goa.Service, ctrl DataClientController) 
 		}
 		return ctrl.Agree(rctx)
 	}
-	service.Mux.Handle("POST", "/data/agree/:ETH_key/:request_id", ctrl.MuxHandler("agree", h, nil))
-	service.LogInfo("mount", "ctrl", "DataClient", "action", "Agree", "route", "POST /data/agree/:ETH_key/:request_id")
+	service.Mux.Handle("POST", "/data/agree/:ETH_key/:data_hash/:contract_hash", ctrl.MuxHandler("agree", h, nil))
+	service.LogInfo("mount", "ctrl", "DataClient", "action", "Agree", "route", "POST /data/agree/:ETH_key/:data_hash/:contract_hash")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -89,8 +89,8 @@ func MountDataClientController(service *goa.Service, ctrl DataClientController) 
 		}
 		return ctrl.AskComputing(rctx)
 	}
-	service.Mux.Handle("POST", "/data/askComputing/:hash/:ETH_key/:request_id", ctrl.MuxHandler("askComputing", h, nil))
-	service.LogInfo("mount", "ctrl", "DataClient", "action", "AskComputing", "route", "POST /data/askComputing/:hash/:ETH_key/:request_id")
+	service.Mux.Handle("POST", "/data/askComputing/:ETH_key/:computing_hash/:contract_hash/:public_key", ctrl.MuxHandler("askComputing", h, nil))
+	service.LogInfo("mount", "ctrl", "DataClient", "action", "AskComputing", "route", "POST /data/askComputing/:ETH_key/:computing_hash/:contract_hash/:public_key")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -104,8 +104,8 @@ func MountDataClientController(service *goa.Service, ctrl DataClientController) 
 		}
 		return ctrl.Del(rctx)
 	}
-	service.Mux.Handle("POST", "/data/del/:hash/:private_key", ctrl.MuxHandler("del", h, nil))
-	service.LogInfo("mount", "ctrl", "DataClient", "action", "Del", "route", "POST /data/del/:hash/:private_key")
+	service.Mux.Handle("POST", "/data/del/:hash/:ETH_key", ctrl.MuxHandler("del", h, nil))
+	service.LogInfo("mount", "ctrl", "DataClient", "action", "Del", "route", "POST /data/del/:hash/:ETH_key")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -119,8 +119,8 @@ func MountDataClientController(service *goa.Service, ctrl DataClientController) 
 		}
 		return ctrl.UploadData(rctx)
 	}
-	service.Mux.Handle("POST", "/data/upload/:hash/:ETH_key/:request_id", ctrl.MuxHandler("uploadData", h, nil))
-	service.LogInfo("mount", "ctrl", "DataClient", "action", "UploadData", "route", "POST /data/upload/:hash/:ETH_key/:request_id")
+	service.Mux.Handle("POST", "/data/upload/:encrypt_data_hash/:ETH_key/:data_hash/:contract_hash", ctrl.MuxHandler("uploadData", h, nil))
+	service.LogInfo("mount", "ctrl", "DataClient", "action", "UploadData", "route", "POST /data/upload/:encrypt_data_hash/:ETH_key/:data_hash/:contract_hash")
 }
 
 // SwaggerController is the controller interface for the Swagger actions.

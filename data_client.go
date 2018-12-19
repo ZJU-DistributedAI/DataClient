@@ -46,7 +46,7 @@ type DataClientConfig struct {
 // Add runs the add action.
 func (c *DataClientController) Add(ctx *app.AddDataClientContext) error {
 	// check
-	if check_valid_arguments(ctx.Hash, ctx.PrivateKey) == false {
+	if check_valid_arguments(ctx.Hash, ctx.ETHKey) == false {
 		return ctx.BadRequest(
 			goa.ErrBadRequest("Invalid arguments!"))
 	}
@@ -59,14 +59,14 @@ func (c *DataClientController) Add(ctx *app.AddDataClientContext) error {
 	}
 
 	// generate transaction
-	tx, err := generate_transaction("add", ctx.Hash, ctx.PrivateKey, config)
+	tx, err := generate_transaction("add", ctx.Hash, ctx.ETHKey, config)
 	if err != nil{
 		return ctx.InternalServerError(
 			goa.ErrInternal("Generate transaction failed!"))
 	}
 
 	// sign transaction
-	signedTx, err := signTransaction(tx, ctx.PrivateKey)
+	signedTx, err := signTransaction(tx, ctx.ETHKey)
 	if err != nil{
 		return ctx.InternalServerError(
 			goa.ErrInternal("Fail to sign transaction"))
@@ -82,23 +82,19 @@ func (c *DataClientController) Add(ctx *app.AddDataClientContext) error {
 
 // Agree runs the agree action.
 func (c *DataClientController) Agree(ctx *app.AgreeDataClientContext) error {
-
-
-	return ctx.OK([]byte("Transaction ID of ETH"))
+	return ctx.NotImplemented(goa.ErrInternal("Not implemented"))
 }
 
 // AskComputing runs the askComputing action.
 func (c *DataClientController) AskComputing(ctx *app.AskComputingDataClientContext) error {
-
-
-	return ctx.OK([]byte("Transaction ID of ETH"))
+	return ctx.NotImplemented(goa.ErrInternal("Not implemented"))
 }
 
 // Del runs the del action.
 func (c *DataClientController) Del(ctx *app.DelDataClientContext) error {
 
 	// check
-	if check_valid_arguments(ctx.Hash, ctx.PrivateKey) == false {
+	if check_valid_arguments(ctx.Hash, ctx.ETHKey) == false {
 		return ctx.BadRequest(
 			goa.ErrBadRequest("Invalid arguments!"))
 	}
@@ -112,14 +108,14 @@ func (c *DataClientController) Del(ctx *app.DelDataClientContext) error {
 	}
 
 	// generate transaction
-	tx, err := generate_transaction("del", ctx.Hash, ctx.PrivateKey, config)
+	tx, err := generate_transaction("del", ctx.Hash, ctx.ETHKey, config)
 	if err != nil{
 		return ctx.BadRequest(
 			goa.ErrBadRequest("Generate transaction failed!"))
 	}
 
 	// sign transaction
-	signedTx, err := signTransaction(tx, ctx.PrivateKey)
+	signedTx, err := signTransaction(tx, ctx.ETHKey)
 	if err != nil{
 		return ctx.InternalServerError(
 			goa.ErrInternal("Fail to sign transaction"))
@@ -137,8 +133,7 @@ func (c *DataClientController) Del(ctx *app.DelDataClientContext) error {
 // UploadData runs the uploadData action.
 func (c *DataClientController) UploadData(ctx *app.UploadDataDataClientContext) error {
 
-
-	return ctx.OK([]byte("Transaction ID of ETH"))
+	return ctx.NotImplemented(goa.ErrInternal("Not implemented"))
 }
 
 
