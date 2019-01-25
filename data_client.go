@@ -35,6 +35,18 @@ type DataClientConfig struct {
 	Del_to_address		string
 	Del_data_prefix		string
 
+	// agree info
+	Agree_to_address 	string
+	Agree_data_prefix	string
+
+	// ask computing info
+	Ask_to_address		string
+	Ask_comp_prefix  	string
+
+	// upload data info
+	Upload_to_address	string
+	Upload_data_prefix 	string
+
 	// public info
 	ETH_HOST 			string
 	Value 				string
@@ -80,14 +92,110 @@ func (c *DataClientController) Add(ctx *app.AddDataClientContext) error {
 	return ctx.OK([]byte(transactionHash))
 }
 
-// Agree runs the agree action.
+func valid_agree_arguments(ETH_key string, hash string, data_hash string) bool{
+
+	// easy check
+	if len(hash) != 46 || len(ETH_key) != 64 || len(data_hash) != 46{
+		return false
+	}
+	return true
+}
+
+// Agree data request the agree action.
+// 数据格式  agree datahash:contractHash
 func (c *DataClientController) Agree(ctx *app.AgreeDataClientContext) error {
-	return ctx.NotImplemented(goa.ErrInternal("Not implemented"))
+	// 获取判断swaggerUI上的参数参数；同意并发送到以太坊 => 离线签名
+	if valid_agree_arguments(ctx.ETHKey,  ctx.ContractHash, ctx.DataHash) == false {
+		goa.LogInfo(context.Background(), "ctx.Hash===========>", ctx)
+		return ctx.BadRequest(
+			goa.ErrBadRequest("Agree action Invalid arguments!"))
+	}
+
+	// read config
+	config := read_config()
+	if config == nil{
+		goa.LogInfo(context.Background(), "Config of data client error")
+		return ctx.InternalServerError(
+			goa.ErrInternal("Config of data client error"))
+	}
+
+	// generate transaction
+	tx, err := generate_transaction("agree", ctx.DataHash + ":" + ctx.ContractHash, ctx.ETHKey, config)
+	if err != nil{
+		return ctx.InternalServerError(
+			goa.ErrInternal("Generate transaction failed!"))
+	}
+
+	// sign transaction
+	signedTx, err := signTransaction(tx, ctx.ETHKey)
+	if err != nil{
+		return ctx.InternalServerError(
+			goa.ErrInternal("Fail to sign transaction"))
+	}
+	// send transaction
+	transactionHash, err := sendTransaction(signedTx, config.ETH_HOST)
+	if err != nil{
+		return ctx.InternalServerError(
+			goa.ErrInternal("Fail to send transaction"))
+	}
+	return ctx.OK([]byte(transactionHash))
+}
+
+
+func valid_hash(hash string) bool{
+
+	// easy check
+	if len(hash) != 46{
+		return false
+	}
+	return true
+}
+
+func valid_key(key string) bool{
+	if len(key) != 64{
+		return false
+	}
+	return true
 }
 
 // AskComputing runs the askComputing action.
+// 数据格式： ask  ContractHash:ComputingHash:PublicKey
 func (c *DataClientController) AskComputing(ctx *app.AskComputingDataClientContext) error {
-	return ctx.NotImplemented(goa.ErrInternal("Not implemented"))
+	// check
+	if valid_agree_arguments(ctx.ETHKey,  ctx.ContractHash, ctx.ComputingHash) == false || valid_key(ctx.PublicKey) == false {
+		goa.LogInfo(context.Background(), "ctx.Hash===========>", ctx)
+		return ctx.BadRequest(
+			goa.ErrBadRequest("Agree action Invalid arguments!"))
+	}
+
+	// read config
+	config := read_config()
+	if config == nil{
+		goa.LogInfo(context.Background(), "Config of data client error")
+		return ctx.InternalServerError(
+			goa.ErrInternal("Config of data client error"))
+	}
+
+	// generate transaction
+	tx, err := generate_transaction("ask", ctx.ContractHash + ":" + ctx.ComputingHash + ":" + ctx.PublicKey, ctx.ETHKey, config)
+	if err != nil{
+		return ctx.InternalServerError(
+			goa.ErrInternal("Generate transaction failed!"))
+	}
+
+	// sign transaction
+	signedTx, err := signTransaction(tx, ctx.ETHKey)
+	if err != nil{
+		return ctx.InternalServerError(
+			goa.ErrInternal("Fail to sign transaction"))
+	}
+	// send transaction
+	transactionHash, err := sendTransaction(signedTx, config.ETH_HOST)
+	if err != nil{
+		return ctx.InternalServerError(
+			goa.ErrInternal("Fail to send transaction"))
+	}
+	return ctx.OK([]byte(transactionHash))
 }
 
 // Del runs the del action.
@@ -132,10 +240,42 @@ func (c *DataClientController) Del(ctx *app.DelDataClientContext) error {
 
 // UploadData runs the uploadData action.
 func (c *DataClientController) UploadData(ctx *app.UploadDataDataClientContext) error {
+	// check
+	if valid_agree_arguments(ctx.ETHKey,  ctx.ContractHash, ctx.EncryptDataHash) == false || valid_hash(ctx.DataHash) == false {
+		goa.LogInfo(context.Background(), "ctx.Hash===========>", ctx)
+		return ctx.BadRequest(
+			goa.ErrBadRequest("Agree action Invalid arguments!"))
+	}
 
-	return ctx.NotImplemented(goa.ErrInternal("Not implemented"))
+	// read config
+	config := read_config()
+	if config == nil{
+		goa.LogInfo(context.Background(), "Config of data client error")
+		return ctx.InternalServerError(
+			goa.ErrInternal("Config of data client error"))
+	}
+
+	// generate transaction
+	tx, err := generate_transaction("upload", ctx.ContractHash + ":" + ctx.EncryptDataHash + ":" + ctx.DataHash, ctx.ETHKey, config)
+	if err != nil{
+		return ctx.InternalServerError(
+			goa.ErrInternal("Generate transaction failed!"))
+	}
+
+	// sign transaction
+	signedTx, err := signTransaction(tx, ctx.ETHKey)
+	if err != nil{
+		return ctx.InternalServerError(
+			goa.ErrInternal("Fail to sign transaction"))
+	}
+	// send transaction
+	transactionHash, err := sendTransaction(signedTx, config.ETH_HOST)
+	if err != nil{
+		return ctx.InternalServerError(
+			goa.ErrInternal("Fail to send transaction"))
+	}
+	return ctx.OK([]byte(transactionHash))
 }
-
 
 func generate_transaction(op string, hash string, private_key_str string, config * DataClientConfig) (*types.Transaction, error){
 
@@ -148,9 +288,21 @@ func generate_transaction(op string, hash string, private_key_str string, config
 	// data
 	to := config.Add_to_address
 	data := config.Add_data_prefix + hash
-	if op != "add"{
+	if op == "del"{
 		to 		= config.Del_to_address
 		data	= config.Del_data_prefix + hash
+	}
+	if op == "agree"{
+		to 		= config.Agree_to_address
+		data	= config.Agree_data_prefix + hash
+	}
+	if op == "upload"{
+		to		= config.Upload_to_address
+		data	= config.Upload_data_prefix + hash
+	}
+	if op == "ask"{
+		to 		= config.Ask_to_address
+		data 	= config.Ask_comp_prefix + hash
 	}
 	fmt.Println(data)
 
