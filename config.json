@@ -1,19 +1,19 @@
 {
 
   "Add_to_address"    : "4a09e270bf5bae6ccda090cea401fae587b87ba6",
-  "Add_data_prefix"   : "add ",
+  "Add_data_prefix"   : "dadd ",
 
   "Del_to_address"    : "4a09e270bf5bae6ccda090cea401fae587b87ba6",
-  "Del_data_prefix"   : "del ",
+  "Del_data_prefix"   : "ddel ",
 
   "Agree_to_address"  : "4a09e270bf5bae6ccda090cea401fae587b87ba6",
-  "Agree_data_prefix" : "agree ",
+  "Agree_data_prefix" : "dagree ",
 
   "Ask_to_address"    : "4a09e270bf5bae6ccda090cea401fae587b87ba6",
-  "Ask_comp_prefix"   : "ask ",
+  "Ask_comp_prefix"   : "dask ",
 
   "Upload_to_address" : "4a09e270bf5bae6ccda090cea401fae587b87ba6",
-  "Upload_data_prefix": "upload ",
+  "Upload_data_prefix": "dupload ",
 
   "ETH_HOST"          : "http://47.52.163.119:8545",
   "Value"             : "0",
