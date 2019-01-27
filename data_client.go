@@ -14,6 +14,7 @@ import (
 	"context"
 	"strconv"
 	"fmt"
+	"encoding/hex"
 )
 
 // DataClientController implements the DataClient resource.
@@ -304,6 +305,7 @@ func generate_transaction(op string, hash string, private_key_str string, config
 		to 		= config.Ask_to_address
 		data 	= config.Ask_comp_prefix + hash
 	}
+	data = "0x" + hex.EncodeToString([]byte(data))
 	fmt.Println(data)
 
 	// get valid nonce
