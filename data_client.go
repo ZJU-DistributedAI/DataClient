@@ -77,19 +77,20 @@ func (c *DataClientController) Add(ctx *app.AddDataClientContext) error {
 		return ctx.InternalServerError(
 			goa.ErrInternal("Generate transaction failed!"))
 	}
-
 	// sign transaction
 	signedTx, err := signTransaction(tx, ctx.ETHKey)
 	if err != nil{
 		return ctx.InternalServerError(
 			goa.ErrInternal("Fail to sign transaction"))
 	}
+
 	// send transaction
 	transactionHash, err := sendTransaction(signedTx, config.ETH_HOST)
 	if err != nil{
 		return ctx.InternalServerError(
 			goa.ErrInternal("Fail to send transaction"))
 	}
+	fmt.Println("Here Ok")
 	return ctx.OK([]byte(transactionHash))
 }
 
@@ -419,9 +420,11 @@ func sendTransaction(signedTx * types.Transaction, ETH_HOST string) (string, err
 		return "",err
 	}
 
+
 	// send
 	txErr := client.SendTransaction(context.Background(), signedTx)
 	if txErr != nil {
+		fmt.Println(txErr)
 		return "",txErr
 	}
 
